@@ -258,8 +258,20 @@ const socialLinks = () => Object.entries(site.social)
 
 // ---------------------------------------------------------------- pages
 
+const infoSheet = (p, id, { deferVideos = false } = {}) => {
+  let body = p.bodyHtml;
+  // On the homepage every project's info is on one page, so videos load only when their sheet opens.
+  if (deferVideos) body = body.replace(/<iframe src=/g, '<iframe data-src=');
+  return sheetShell(id, `About ${p.title}`, `    <h2 class="sheet-title">${inline(p.title)}</h2>
+    <div class="prose info-body">
+${body}
+    </div>
+    <p class="vimeo-link">${p.vimeo ? `<a href="${esc(vimeoPage(p.vimeo))}">Watch on Vimeo</a>` : ''}</p>`);
+};
+
 function homePage() {
   const slides = projects.map(p => ({
+    slug: p.slug,
     title: p.title,
     tech: p.tech,
     page: href(p.url),
@@ -325,7 +337,7 @@ ${slides.map((s, k) => `    <div class="slide${k === 0 ? ' is-active' : ''}" dat
       <button type="button" class="glass-circle play-btn" data-play aria-label="Play film">${ICON_PLAY}</button>
       <span class="now-title" data-title>${inline(first ? first.title : '')}</span>
     </div>
-    <a class="glass-pill" href="${first ? href(first.url) : '#'}" data-page>Project info</a>
+    <a class="glass-pill" href="${first ? href(first.url) : '#'}" data-page${first ? ` data-sheet="info-${first.slug}"` : ''}>Project info</a>
     <nav class="bb-nav" aria-label="Main">
       <a href="#work" data-sheet="work">Menu</a>
       <a href="#about" data-sheet="about">About</a>
@@ -344,6 +356,7 @@ ${slides.map((s, k) => `    <div class="slide${k === 0 ? ' is-active' : ''}" dat
 ${workSheet}
 ${aboutSheet}
 ${contactSheet}
+${projects.map(p => infoSheet(p, 'info-' + p.slug, { deferVideos: true })).join('\n')}
 
 <script id="slides-data" type="application/json">${JSON.stringify(slides).replace(/</g, '\\u003c')}</script>
 <script src="${href('/assets/site.js')}" defer></script>
@@ -404,11 +417,7 @@ function projectPage(p, k) {
 </main>
 
 <div class="scrim" data-close></div>
-${sheetShell('info', 'About this project', `    <h2 class="sheet-title">${inline(p.title)}</h2>
-    <div class="prose info-body">
-${p.bodyHtml}
-    </div>
-    <p class="vimeo-link">${p.vimeo ? `<a href="${esc(vimeoPage(p.vimeo))}">Watch on Vimeo</a>` : ''}</p>`)}
+${infoSheet(p, 'info')}
 <script src="${href('/assets/site.js')}" defer></script>
 </body>
 </html>

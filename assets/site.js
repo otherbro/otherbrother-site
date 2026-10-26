@@ -17,6 +17,7 @@
     if (openSheetEl && openSheetEl !== el) openSheetEl.classList.remove('is-open');
     lastFocus = document.activeElement;
     openSheetEl = el;
+    $$('iframe[data-src]', el).forEach(f => { f.src = f.dataset.src; f.removeAttribute('data-src'); });
     el.classList.add('is-open');
     document.body.classList.add('sheet-open');
     if (updateHash) history.replaceState(null, '', '#' + name);
@@ -26,6 +27,8 @@
   function closeSheet() {
     if (!openSheetEl) return;
     openSheetEl.classList.remove('is-open');
+    // stop any video still playing inside the sheet
+    $$('iframe', openSheetEl).forEach(f => { try { f.contentWindow.postMessage('{"method":"pause"}', '*'); } catch (e) {} });
     document.body.classList.remove('sheet-open');
     openSheetEl = null;
     history.replaceState(null, '', location.pathname + location.search);
@@ -108,6 +111,7 @@
       counterEl.textContent = pad(i + 1);
       titleEl.textContent = s.title;
       pageLink.href = s.page;
+      pageLink.dataset.sheet = 'info-' + s.slug;
       playButtons.forEach(b => b.setAttribute('aria-label', (s.film ? 'Play ' : 'Open ') + s.title));
       workItems.forEach((a, n) => a.setAttribute('aria-current', n === i ? 'true' : 'false'));
       setLoop(i);
@@ -164,7 +168,9 @@
     document.addEventListener('visibilitychange', () => { if (!document.hidden) restartTimer(); });
     onSheetChange(name => { if (!name) restartTimer(); });
 
-    show(0);
+    // deep link like /#info-catcher starts on that project
+    const startSlug = location.hash.startsWith('#info-') ? location.hash.slice(6) : '';
+    show(Math.max(0, slides.findIndex(s => s.slug === startSlug)));
   }
 
   // ------------------------------------------------------------ keyboard + deep links
