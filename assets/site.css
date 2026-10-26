@@ -186,8 +186,8 @@ body.project { background: var(--sheet); }
 .outline-pill { background: none; border: 1px solid var(--ink); border-radius: 999px; color: var(--ink); font-size: 15px; font-weight: 500; padding: 10px 22px; cursor: pointer; }
 .project-nav { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-top: 24px; font-size: 16px; font-weight: 500; }
 .project-nav a { text-decoration: none; padding: 10px 0; }
-.vimeo-link { margin: 12px 0 0; font-size: 15px; }
-.vimeo-link a { color: var(--ink-mute); }
+.copyright { margin: 0; font-size: 13px; color: var(--ink-mute); }
+.page-footer { margin-top: 48px; }
 
 /* ---------------------------------------------------------------- 404 */
 

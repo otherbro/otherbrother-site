@@ -4,6 +4,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import crypto from 'node:crypto';
 
 const ROOT = path.dirname(new URL(import.meta.url).pathname);
 const OUT = path.join(ROOT, '_site');
@@ -187,6 +188,10 @@ function loadProjects() {
 }
 
 const projects = loadProjects();
+// Asset URLs carry a fingerprint of the file so browsers never run an old copy after an update.
+const asset = rel => href(rel) + '?v=' + crypto.createHash('md5').update(fs.readFileSync(path.join(ROOT, rel))).digest('hex').slice(0, 8);
+const YEAR = new Date().getFullYear();
+const copyright = () => `<p class="copyright">© ${YEAR} ${esc(site.name)}</p>`;
 const about = readDoc(path.join(ROOT, 'content/about.md'));
 const contact = readDoc(path.join(ROOT, 'content/contact.md'));
 
@@ -226,7 +231,7 @@ ${img ? `<meta property="og:image" content="${esc(img)}">\n<meta name="twitter:i
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="${href('/assets/site.css')}">
+<link rel="stylesheet" href="${asset('/assets/site.css')}">
 <link rel="preconnect" href="https://player.vimeo.com">
 ${jsonld.map(j => `<script type="application/ld+json">${JSON.stringify(j).replace(/</g, '\\u003c')}</script>`).join('\n')}
 </head>`;
@@ -265,8 +270,7 @@ const infoSheet = (p, id, { deferVideos = false } = {}) => {
   return sheetShell(id, `About ${p.title}`, `    <h2 class="sheet-title">${inline(p.title)}</h2>
     <div class="prose info-body">
 ${body}
-    </div>
-    <p class="vimeo-link">${p.vimeo ? `<a href="${esc(vimeoPage(p.vimeo))}">Watch on Vimeo</a>` : ''}</p>`);
+    </div>`);
 };
 
 function homePage() {
@@ -301,12 +305,14 @@ ${projects.map((p, k) => `      <li><a class="work-item" href="${href(p.url)}" d
     <div class="prose">${markdown(intro)}</div>
     ${about.data.photo ? `<img class="about-photo" src="${href('/content/' + about.data.photo)}" alt="${esc(about.data.photo_alt || '')}" loading="lazy" decoding="async">` : ''}
     <div class="bios">${bios}</div>
-    <div class="link-row"><a class="strong" href="mailto:${esc(site.email)}">${esc(site.email)}</a>${socialLinks()}</div>`);
+    <div class="link-row"><a class="strong" href="mailto:${esc(site.email)}">${esc(site.email)}</a>${socialLinks()}</div>
+    ${copyright()}`);
 
   const contactSheet = sheetShell('contact', 'Contact', `    <h2 class="sheet-title">${contactHeading}</h2>
     <div class="prose">${markdown(contact.body)}</div>
     <a class="email-button" href="mailto:${esc(site.email)}">${esc(site.email)}</a>
-    <div class="link-row">${socialLinks()}</div>`);
+    <div class="link-row">${socialLinks()}</div>
+    ${copyright()}`);
 
   const jsonld = [
     orgLd(),
@@ -359,7 +365,7 @@ ${contactSheet}
 ${projects.map(p => infoSheet(p, 'info-' + p.slug, { deferVideos: true })).join('\n')}
 
 <script id="slides-data" type="application/json">${JSON.stringify(slides).replace(/</g, '\\u003c')}</script>
-<script src="${href('/assets/site.js')}" defer></script>
+<script src="${asset('/assets/site.js')}" defer></script>
 </body>
 </html>
 `;
@@ -414,11 +420,12 @@ function projectPage(p, k) {
     <a href="${href(prev.url)}" rel="prev">← ${inline(prev.title)}</a>
     <a href="${href(next.url)}" rel="next">${inline(next.title)} →</a>
   </nav>
+  <footer class="page-footer">${copyright()}</footer>
 </main>
 
 <div class="scrim" data-close></div>
 ${infoSheet(p, 'info')}
-<script src="${href('/assets/site.js')}" defer></script>
+<script src="${asset('/assets/site.js')}" defer></script>
 </body>
 </html>
 `;
