@@ -90,7 +90,7 @@ function embed(spec, title) {
 // Supports: paragraphs, ## / ### (section label) / #### (subhead), `- ` lists,
 // **bold**, *italic*, [links](url), and media blocks:
 //   ::: video            one full-width Vimeo video per line:  id[/hash] | title
-//   ::: videos           a grid of Vimeo videos, same line format
+//   ::: videos 1/1       a grid of Vimeo videos, same line format (ratio optional, default 16/9)
 //   ::: images 16/9      a grid of images from the project folder:  file.jpg | alt text
 function markdown(md, ctx = {}) {
   const lines = md.replace(/\r\n/g, '\n').split('\n');
@@ -141,7 +141,8 @@ function mediaBlock(kind, arg, items, ctx) {
   if (kind === 'video') return items.map(it => `<div class="media-wide">${embed(it.a, it.b)}</div>`).join('\n');
   if (kind === 'videos') {
     const cols = items.length === 2 || items.length === 4 ? 2 : 3;
-    return `<div class="media-grid cols-${cols}">${items.map(it => embed(it.a, it.b)).join('')}</div>`;
+    const style = arg ? ` style="--video-ratio: ${esc(arg)}"` : '';
+    return `<div class="media-grid cols-${cols}"${style}>${items.map(it => embed(it.a, it.b)).join('')}</div>`;
   }
   if (kind === 'images') {
     const ratio = arg || '4/3';

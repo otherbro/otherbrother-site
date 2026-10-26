@@ -48,7 +48,7 @@ art-2.jpg | Caption
 355406531/e229452c7d | Caption under the video
 :::
 
-::: videos
+::: videos 1/1             ← optional shape; leave off for 16/9
 111111111 | First clip
 222222222 | Second clip
 :::
