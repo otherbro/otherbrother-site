@@ -1,0 +1,178 @@
+// Other Brother — homepage slideshow, film player and pop-up sheets.
+(() => {
+  const $ = (s, el = document) => el.querySelector(s);
+  const $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isPhone = () => window.matchMedia('(max-width: 820px)').matches;
+
+  // ------------------------------------------------------------ sheets
+  let openSheetEl = null;
+  let lastFocus = null;
+  const listeners = [];
+  const onSheetChange = fn => listeners.push(fn);
+
+  function openSheet(name, { updateHash = true } = {}) {
+    const el = document.getElementById('sheet-' + name);
+    if (!el) return;
+    if (openSheetEl && openSheetEl !== el) openSheetEl.classList.remove('is-open');
+    lastFocus = document.activeElement;
+    openSheetEl = el;
+    el.classList.add('is-open');
+    document.body.classList.add('sheet-open');
+    if (updateHash) history.replaceState(null, '', '#' + name);
+    setTimeout(() => { const c = $('.sheet-close', el); if (c) c.focus({ preventScroll: true }); }, 50);
+    listeners.forEach(fn => fn(name));
+  }
+  function closeSheet() {
+    if (!openSheetEl) return;
+    openSheetEl.classList.remove('is-open');
+    document.body.classList.remove('sheet-open');
+    openSheetEl = null;
+    history.replaceState(null, '', location.pathname + location.search);
+    if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
+    listeners.forEach(fn => fn(null));
+  }
+
+  document.addEventListener('click', e => {
+    const opener = e.target.closest('[data-sheet]');
+    if (opener) { e.preventDefault(); openSheet(opener.dataset.sheet); return; }
+    if (e.target.closest('[data-close]')) { e.preventDefault(); closeSheet(); }
+  });
+
+  // ------------------------------------------------------------ project page film
+  const film = $('.film[data-film]');
+  if (film) {
+    $('[data-film-play]', film).addEventListener('click', () => {
+      const f = document.createElement('iframe');
+      f.src = film.dataset.film;
+      f.allow = 'autoplay; fullscreen; picture-in-picture';
+      f.allowFullscreen = true;
+      f.title = document.title;
+      film.innerHTML = '';
+      film.appendChild(f);
+    });
+  }
+
+  // ------------------------------------------------------------ homepage
+  const dataEl = $('#slides-data');
+  let player = null;
+  let closePlayer = () => {};
+  if (dataEl) {
+    const slides = JSON.parse(dataEl.textContent);
+    const slideEls = $$('.slide');
+    const counterEl = $('[data-counter]');
+    const titleEl = $('[data-title]');
+    const pageLink = $('[data-page]');
+    const playButtons = $$('[data-play]');
+    const workItems = $$('.work-item');
+    player = $('.player');
+    const playerFrame = $('.player-frame');
+    const playerTitle = $('[data-player-title]');
+    const durations = {};
+    const pad = n => String(n).padStart(2, '0');
+    let i = 0;
+    let timer = null;
+
+    const paused = () => !!openSheetEl || !player.hidden || document.hidden || reduceMotion;
+    const slideMs = k => (durations[k] && isFinite(durations[k]) && durations[k] > 1 ? durations[k] * 1000 : 6000);
+
+    function restartTimer() {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        if (!paused()) show((i + 1) % slides.length);
+        else restartTimer();
+      }, slideMs(i));
+    }
+
+    function setLoop(k) {
+      slideEls.forEach((el, n) => { if (n !== k) { const v = $('video', el); if (v) v.remove(); } });
+      const s = slides[k];
+      const src = isPhone() ? (s.loopMobile || s.loop) : (s.loop || s.loopMobile);
+      if (!src || reduceMotion) return;
+      const el = slideEls[k];
+      const v = document.createElement('video');
+      v.muted = true; v.defaultMuted = true; v.playsInline = true; v.loop = true; v.autoplay = true;
+      v.setAttribute('muted', ''); v.setAttribute('playsinline', ''); v.setAttribute('aria-hidden', 'true');
+      v.preload = 'auto';
+      if (s.poster) v.poster = s.poster;
+      v.addEventListener('loadedmetadata', () => { durations[k] = v.duration; if (k === i) restartTimer(); });
+      v.src = src;
+      el.appendChild(v);
+      v.play().catch(() => {});
+    }
+
+    function show(k) {
+      i = (k + slides.length) % slides.length;
+      const s = slides[i];
+      slideEls.forEach((el, n) => el.classList.toggle('is-active', n === i));
+      counterEl.textContent = pad(i + 1);
+      titleEl.textContent = s.title;
+      pageLink.href = s.page;
+      playButtons.forEach(b => b.setAttribute('aria-label', (s.film ? 'Play ' : 'Open ') + s.title));
+      workItems.forEach((a, n) => a.setAttribute('aria-current', n === i ? 'true' : 'false'));
+      setLoop(i);
+      restartTimer();
+    }
+
+    function openPlayer() {
+      const s = slides[i];
+      if (!s.film) { location.href = s.page; return; }
+      playerFrame.innerHTML = '';
+      const f = document.createElement('iframe');
+      f.src = s.film; f.allow = 'autoplay; fullscreen; picture-in-picture'; f.allowFullscreen = true; f.title = s.title;
+      playerFrame.appendChild(f);
+      playerTitle.textContent = s.title;
+      player.hidden = false;
+      const v = $('video', slideEls[i]); if (v) v.pause();
+      $('[data-close-player]').focus();
+    }
+    closePlayer = () => {
+      if (player.hidden) return;
+      player.hidden = true;
+      playerFrame.innerHTML = '';
+      const v = $('video', slideEls[i]); if (v) v.play().catch(() => {});
+      restartTimer();
+    };
+
+    playButtons.forEach(b => b.addEventListener('click', openPlayer));
+    $('[data-close-player]').addEventListener('click', closePlayer);
+    $$('[data-go]').forEach(b => b.addEventListener('click', () => show(i + (b.dataset.go === 'next' ? 1 : -1))));
+    workItems.forEach(a => a.addEventListener('click', e => {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
+      e.preventDefault();
+      closeSheet();
+      show(Number(a.dataset.index));
+    }));
+
+    // swipe left / right on phones
+    let touchX = null, touchY = null;
+    const stage = $('#stage');
+    stage.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; touchY = e.touches[0].clientY; }, { passive: true });
+    stage.addEventListener('touchend', e => {
+      if (touchX === null) return;
+      const dx = e.changedTouches[0].clientX - touchX;
+      const dy = e.changedTouches[0].clientY - touchY;
+      touchX = null;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) show(i + (dx < 0 ? 1 : -1));
+    });
+
+    document.addEventListener('keydown', e => {
+      if (openSheetEl || !player.hidden) return;
+      if (e.key === 'ArrowRight') show(i + 1);
+      if (e.key === 'ArrowLeft') show(i - 1);
+    });
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) restartTimer(); });
+    onSheetChange(name => { if (!name) restartTimer(); });
+
+    show(0);
+  }
+
+  // ------------------------------------------------------------ keyboard + deep links
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    if (player && !player.hidden) closePlayer();
+    else closeSheet();
+  });
+  const fromHash = location.hash.replace('#', '');
+  if (fromHash && document.getElementById('sheet-' + fromHash)) openSheet(fromHash, { updateHash: false });
+})();

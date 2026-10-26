@@ -1,0 +1,26 @@
+{
+  "name": "Other Brother",
+  "tagline": "Handmade stories for curious brands and serious science",
+  "description": "Other Brother is an animation and production studio from director duo Isaiah Powers and Stuart Bury: stop motion, puppetry, papercraft, mixed media and 2D, for brands, broadcasters and pharma and healthcare teams.",
+  "url": "https://otherbro.github.io/otherbrother-site",
+  "basePath": "/otherbrother-site",
+  "email": "info@otherbrother.com",
+  "founders": ["Isaiah Powers", "Stuart Bury"],
+  "social": {
+    "Instagram": "https://www.instagram.com/otherbrotherstudios/",
+    "YouTube": "https://www.youtube.com/@otherbrother",
+    "LinkedIn": "https://www.linkedin.com/company/other-brother/",
+    "Vimeo": "https://vimeo.com/obrostudios"
+  },
+  "redirects": {
+    "/home": "/",
+    "/about": "/#about",
+    "/upstream-creative-consulting": "/",
+    "/moa-mod-videos": "/work/vyvgart/",
+    "/explainer": "/",
+    "/shortfilms": "/work/howl/",
+    "/vyvgart-case-study": "/work/vyvgart/",
+    "/bayer-advantage-multi-copy": "/work/advantage-multi/",
+    "/other-brother-blog": "/"
+  }
+}
