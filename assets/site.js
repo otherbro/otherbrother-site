@@ -77,7 +77,7 @@
     let timer = null;
 
     const paused = () => !!openSheetEl || !player.hidden || document.hidden || reduceMotion;
-    const slideMs = k => (durations[k] && isFinite(durations[k]) && durations[k] > 1 ? durations[k] * 1000 : 6000);
+    const slideMs = k => (durations[k] && isFinite(durations[k]) && durations[k] > 1 ? durations[k] * 2000 : 6000); // each loop plays twice
 
     function restartTimer() {
       clearTimeout(timer);
