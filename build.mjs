@@ -192,7 +192,7 @@ function mediaBlock(kind, arg, items, ctx) {
         const size = ctx.folder && imageSize(path.join(ctx.folder, it.a));
         const r = size ? size.w / size.h : 4 / 3;
         const src = ctx.mediaPath ? ctx.mediaPath(it.a) : it.a;
-        return `<div class="media-cell" style="flex-grow: ${r.toFixed(4)}"><figure class="still" style="--ratio: ${r.toFixed(4)}"><a href="${esc(src)}"><img src="${esc(src)}" alt="${esc(it.b)}" loading="lazy" decoding="async"></a></figure></div>`;
+        return `<div class="media-cell" style="flex-grow: ${r.toFixed(4)}"><figure class="still" style="--ratio: ${r.toFixed(4)}"><img src="${esc(src)}" alt="${esc(it.b)}" loading="lazy" decoding="async"></figure></div>`;
       }
       const ratio = filmRatios.get(it.a) || '16 / 9';
       return `<div class="media-cell" style="flex-grow: ${ratioNumber(ratio).toFixed(4)}">${embed(it.a, it.b, ratio)}</div>`;
