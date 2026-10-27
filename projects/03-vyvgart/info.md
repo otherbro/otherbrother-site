@@ -9,23 +9,7 @@ This sting reel covers a collection of clips from our many award-winning MOA/MOD
 
 Our flagship VYVGART video made it through all of the legal reviews from storyboard through to final video with no major revisions.
 
-### Client objective
-
-#### New Drug Awareness and Benefits
-
-It is important for pharmaceutical advertising to deliver compelling information without being overly technical. The goal for this video was to clearly communicate and engage with those who could benefit from their product by showcasing their new and possibly important information in a way that people would not simply skim over it. This was a unique product and needed to be presented in a way that was fresh, clear and imaginative.
-
-### Solution
-
-#### Highly Designed Visuals
-
-We focused on what we heard from patient feedback and designed a clear and concise story that entertains and educates. All the imagery is carefully designed to be attuned to the subject at hand, but is also playful as it gives a nod to cartoon modern styling. It truly stands out in the industry as a one-of-a-kind MOA and MOD video.
-
-### Result
-
-#### A New Effective Way to Make Pharma Videos
-
-The audience feedback was overwhelmingly positive. Many patients reported that they felt heard and respected and that they had never seen a video like this before. Our animations talked to them, not at them all in a way that was clear, beneficial and engaging.
+The audience feedback was overwhelmingly positive. Many patients reported that they felt heard and respected and that they had never seen a video like this before. Our animations talked to them, not at them. We were able to present complex ideas in a way that was clear, beneficial and engaging.
 
 ### Awards & accolades
 
