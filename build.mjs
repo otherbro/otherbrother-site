@@ -95,8 +95,10 @@ async function vimeoRatio(spec) {
     return width && height ? `${width} / ${height}` : '';
   } catch { return ''; }
 }
-function embed(spec, title) {
-  return `<figure class="embed"><div class="embed-frame"><iframe src="${esc(vimeoSrc(spec))}" title="${esc(title || 'Video')}" loading="lazy" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>${title ? `<figcaption>${inline(title)}</figcaption>` : ''}</figure>`;
+// Filled in at build start for every film and `::: video` clip (see vimeoRatios below).
+const filmRatios = new Map();
+function embed(spec, title, ratio = '') {
+  return `<figure class="embed"><div class="embed-frame"${ratio ? ` style="--video-ratio: ${esc(ratio)}"` : ''}><iframe src="${esc(vimeoSrc(spec))}" title="${esc(title || 'Video')}" loading="lazy" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>${title ? `<figcaption>${inline(title)}</figcaption>` : ''}</figure>`;
 }
 
 // ---------------------------------------------------------------- markdown
@@ -152,7 +154,7 @@ function markdown(md, ctx = {}) {
 }
 
 function mediaBlock(kind, arg, items, ctx) {
-  if (kind === 'video') return items.map(it => `<div class="media-wide">${embed(it.a, it.b)}</div>`).join('\n');
+  if (kind === 'video') return items.map(it => `<div class="media-wide">${embed(it.a, it.b, filmRatios.get(String(it.a).trim()))}</div>`).join('\n');
   if (kind === 'videos') {
     const cols = items.length === 2 || items.length === 4 ? 2 : 3;
     const style = arg ? ` style="--video-ratio: ${esc(arg)}"` : '';
@@ -196,17 +198,23 @@ function loadProjects() {
         poster: pick('poster', 'poster.jpg'),
         loop: pick('loop', 'loop.mp4'),
         loopMobile: pick('loop_mobile', 'loop-mobile.mp4'),
-        bodyHtml: markdown(body, { mediaPath: media }),
+        body, mediaPath: media,
       };
     })
     .filter(Boolean);
 }
 
 const projects = loadProjects();
-await Promise.all(projects.map(async p => {
-  p.ratio = parseRatio(p.data.ratio) || (p.vimeo ? await vimeoRatio(p.vimeo) : '') || '16 / 9';
-  console.log(`  ${p.slug}: ${p.ratio}`);
-}));
+// Look up every film's and `::: video` clip's shape before rendering, so wide or tall films aren't letterboxed.
+const clipSpecs = p => [...p.body.matchAll(/^:::\s*video\s*\n([\s\S]*?)^:::/gm)]
+  .flatMap(m => m[1].split('\n').map(l => l.split('|')[0].trim()).filter(Boolean));
+await Promise.all([...new Set(projects.flatMap(p => [p.vimeo, ...clipSpecs(p)].filter(Boolean).map(v => String(v).trim())))]
+  .map(async spec => { const r = await vimeoRatio(spec); if (r) filmRatios.set(spec, r); }));
+for (const p of projects) {
+  p.ratio = parseRatio(p.data.ratio) || filmRatios.get(String(p.vimeo).trim()) || '16 / 9';
+  p.bodyHtml = markdown(p.body, { mediaPath: p.mediaPath });
+  console.log(`  ${p.slug}: ${p.ratio}${clipSpecs(p).map(c => `, ${c}: ${filmRatios.get(c) || '16 / 9'}`).join('')}`);
+}
 // Asset URLs carry a fingerprint of the file so browsers never run an old copy after an update.
 const asset = rel => href(rel) + '?v=' + crypto.createHash('md5').update(fs.readFileSync(path.join(ROOT, rel))).digest('hex').slice(0, 8);
 const YEAR = new Date().getFullYear();
