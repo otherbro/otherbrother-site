@@ -126,6 +126,7 @@
       f.src = s.film; f.allow = 'autoplay; fullscreen; picture-in-picture'; f.allowFullscreen = true; f.title = s.title;
       playerFrame.appendChild(f);
       playerTitle.textContent = s.title;
+      playerFrame.style.setProperty('--ratio', s.ratio || '16 / 9');
       player.style.setProperty('--player-bg', s.poster ? `url("${s.poster}")` : 'none');
       player.hidden = false;
       const v = $('video', slideEls[i]); if (v) v.pause();

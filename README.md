@@ -32,6 +32,7 @@ Live site: https://otherbro.github.io/otherbrother-site
 title: New Thing
 tech: Short film · stop motion
 vimeo: 123456789            # add /hash for unlisted videos: 123456789/abc123def0
+ratio: 2.39/1                # optional; the film's shape is read from Vimeo, use this only to override it
 description: One or two sentences for Google and link previews.
 ---
 

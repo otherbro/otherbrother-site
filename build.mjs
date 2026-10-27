@@ -81,6 +81,20 @@ function vimeoPage(spec) {
   const { id, hash } = vimeoParts(spec);
   return `https://vimeo.com/${id}${hash ? '/' + hash : ''}`;
 }
+// Film shape for the project page and player, e.g. "2.39 / 1". `ratio:` in info.md wins;
+// otherwise Vimeo's oEmbed dimensions; otherwise 16:9 (e.g. building offline).
+function parseRatio(v) {
+  const m = String(v || '').match(/^\s*(\d+(?:\.\d+)?)\s*[/:x]\s*(\d+(?:\.\d+)?)\s*$/);
+  return m && +m[1] > 0 && +m[2] > 0 ? `${m[1]} / ${m[2]}` : '';
+}
+async function vimeoRatio(spec) {
+  try {
+    const res = await fetch(`https://vimeo.com/api/oembed.json?url=${encodeURIComponent(vimeoPage(spec))}`, { signal: AbortSignal.timeout(8000) });
+    if (!res.ok) return '';
+    const { width, height } = await res.json();
+    return width && height ? `${width} / ${height}` : '';
+  } catch { return ''; }
+}
 function embed(spec, title) {
   return `<figure class="embed"><div class="embed-frame"><iframe src="${esc(vimeoSrc(spec))}" title="${esc(title || 'Video')}" loading="lazy" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>${title ? `<figcaption>${inline(title)}</figcaption>` : ''}</figure>`;
 }
@@ -189,6 +203,10 @@ function loadProjects() {
 }
 
 const projects = loadProjects();
+await Promise.all(projects.map(async p => {
+  p.ratio = parseRatio(p.data.ratio) || (p.vimeo ? await vimeoRatio(p.vimeo) : '') || '16 / 9';
+  console.log(`  ${p.slug}: ${p.ratio}`);
+}));
 // Asset URLs carry a fingerprint of the file so browsers never run an old copy after an update.
 const asset = rel => href(rel) + '?v=' + crypto.createHash('md5').update(fs.readFileSync(path.join(ROOT, rel))).digest('hex').slice(0, 8);
 const YEAR = new Date().getFullYear();
@@ -283,6 +301,7 @@ function homePage() {
     loop: p.loop ? href(p.url + p.loop) : '',
     loopMobile: p.loopMobile ? href(p.url + p.loopMobile) : '',
     film: p.vimeo ? vimeoSrc(p.vimeo, { autoplay: '1' }) : '',
+    ratio: p.ratio,
   }));
   const first = projects[0];
   const pad = n => String(n).padStart(2, '0');
@@ -406,7 +425,7 @@ function projectPage(p, k) {
   <nav aria-label="Main"><a href="${href('/')}">Work</a><a href="${href('/#about')}">About</a><a href="${href('/#contact')}">Contact</a></nav>
 </header>
 <main class="project-main">
-  <div class="film"${p.vimeo ? ` data-film="${esc(vimeoSrc(p.vimeo, { autoplay: '1' }))}"` : ''}>
+  <div class="film" style="--ratio: ${p.ratio}"${p.vimeo ? ` data-film="${esc(vimeoSrc(p.vimeo, { autoplay: '1' }))}"` : ''}>
     ${posterUrl ? `<img class="film-poster" src="${posterUrl}" alt="${esc(p.title)}" fetchpriority="high" decoding="async">` : ''}
     ${p.vimeo
       ? `<button type="button" class="film-hit" data-film-play aria-label="Play ${esc(p.title)}"><span class="glass-circle big">${ICON_PLAY}</span></button>`
