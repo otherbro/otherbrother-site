@@ -163,7 +163,7 @@ function mediaBlock(kind, arg, items, ctx) {
   }
   if (kind === 'images') {
     const ratio = arg || '4/3';
-    const cols = items.length === 2 || items.length === 4 ? 2 : 3;
+    const cols = items.length === 1 ? 1 : items.length === 2 || items.length === 4 ? 2 : 3;
     return `<div class="media-grid cols-${cols}" style="--ratio: ${esc(ratio)}">${items.map(it => {
       const src = ctx.mediaPath ? ctx.mediaPath(it.a) : it.a;
       return `<figure class="still"><a href="${esc(src)}"><img src="${esc(src)}" alt="${esc(it.b)}" loading="lazy" decoding="async"></a></figure>`;

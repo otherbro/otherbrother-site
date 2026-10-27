@@ -147,6 +147,7 @@ body.home { background: var(--navy); color: var(--on-dark); }
 /* media inside sheets */
 .media-wide { width: 100%; }
 .media-grid { width: 100%; display: grid; gap: 12px; }
+.media-grid.cols-1 { grid-template-columns: minmax(0, 1fr); }
 .media-grid.cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .media-grid.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .embed { margin: 0; display: flex; flex-direction: column; gap: 8px; }
