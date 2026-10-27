@@ -32,6 +32,6 @@ art-jar-final.jpg | Finished frame: a glowing yellow butterfly inside a corked g
 :::
 
 ::: row
-759680478/b39f3c8e2b | Compositing pass 2
-759663218/b26a7bd5cb | Compositing pass 1
+759680478/b39f3c8e2b | Jar compositing pass
+759663218/b26a7bd5cb | Intro shot compositing breakdown
 :::
