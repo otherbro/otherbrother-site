@@ -32,7 +32,7 @@ This campaign engaged vets and audiences well beyond the norm with a 430% increa
 
 ### Behind the scenes
 
-::: video
+::: video center
 355406531/e229452c7d | Animatic side by side
 :::
 

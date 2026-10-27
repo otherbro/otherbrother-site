@@ -45,7 +45,7 @@ art-1.jpg | Caption
 art-2.jpg | Caption
 :::
 
-::: video
+::: video                  ← add "center" (::: video center) to center a narrow clip
 355406531/e229452c7d | Caption under the video
 :::
 

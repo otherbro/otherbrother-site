@@ -106,6 +106,7 @@ function embed(spec, title, ratio = '') {
 // Supports: paragraphs, ## / ### (section label) / #### (subhead), `- ` lists,
 // **bold**, *italic*, [links](url), and media blocks:
 //   ::: video            one full-width Vimeo video per line:  id[/hash] | title
+//   ::: video center     same, centered (for clips narrower than the column)
 //   ::: videos 1/1       a grid of Vimeo videos, same line format (ratio optional, default 16/9)
 //   ::: images 16/9      a grid of images from the project folder:  file.jpg | alt text
 function markdown(md, ctx = {}) {
@@ -154,7 +155,7 @@ function markdown(md, ctx = {}) {
 }
 
 function mediaBlock(kind, arg, items, ctx) {
-  if (kind === 'video') return items.map(it => `<div class="media-wide">${embed(it.a, it.b, filmRatios.get(String(it.a).trim()))}</div>`).join('\n');
+  if (kind === 'video') return items.map(it => `<div class="media-wide${arg === 'center' ? ' is-centered' : ''}">${embed(it.a, it.b, filmRatios.get(String(it.a).trim()))}</div>`).join('\n');
   if (kind === 'videos') {
     const cols = items.length === 2 || items.length === 4 ? 2 : 3;
     const style = arg ? ` style="--video-ratio: ${esc(arg)}"` : '';
@@ -206,7 +207,7 @@ function loadProjects() {
 
 const projects = loadProjects();
 // Look up every film's and `::: video` clip's shape before rendering, so wide or tall films aren't letterboxed.
-const clipSpecs = p => [...p.body.matchAll(/^:::\s*video\s*\n([\s\S]*?)^:::/gm)]
+const clipSpecs = p => [...p.body.matchAll(/^:::\s*video\b[^\n]*\n([\s\S]*?)^:::/gm)]
   .flatMap(m => m[1].split('\n').map(l => l.split('|')[0].trim()).filter(Boolean));
 await Promise.all([...new Set(projects.flatMap(p => [p.vimeo, ...clipSpecs(p)].filter(Boolean).map(v => String(v).trim())))]
   .map(async spec => { const r = await vimeoRatio(spec); if (r) filmRatios.set(spec, r); }));
