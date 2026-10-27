@@ -109,6 +109,7 @@ function embed(spec, title, ratio = '') {
 //   ::: video center     same, centered (for clips narrower than the column)
 //   ::: videos 1/1       a grid of Vimeo videos, same line format (ratio optional, default 16/9)
 //   ::: images 16/9      a grid of images from the project folder:  file.jpg | alt text
+//   ::: row              videos and images side by side at equal height (Vimeo line or file.jpg | alt)
 function markdown(md, ctx = {}) {
   const lines = md.replace(/\r\n/g, '\n').split('\n');
   const out = [];
@@ -154,6 +155,22 @@ function markdown(md, ctx = {}) {
   return out.join('\n');
 }
 
+// Pixel size of a JPEG or PNG, for laying out `::: row` blocks; null if unreadable.
+function imageSize(file) {
+  try {
+    const b = fs.readFileSync(file);
+    if (b.readUInt32BE(0) === 0x89504e47) return { w: b.readUInt32BE(16), h: b.readUInt32BE(20) };
+    for (let i = 2; i + 9 < b.length;) {
+      if (b[i] !== 0xff) return null;
+      const marker = b[i + 1];
+      if (marker >= 0xc0 && marker <= 0xcf && ![0xc4, 0xc8, 0xcc].includes(marker)) return { w: b.readUInt16BE(i + 7), h: b.readUInt16BE(i + 5) };
+      i += 2 + b.readUInt16BE(i + 2);
+    }
+  } catch {}
+  return null;
+}
+const ratioNumber = r => { const [w, h] = String(r).split('/').map(Number); return w > 0 && h > 0 ? w / h : 16 / 9; };
+
 function mediaBlock(kind, arg, items, ctx) {
   if (kind === 'video') return items.map(it => `<div class="media-wide${arg === 'center' ? ' is-centered' : ''}">${embed(it.a, it.b, filmRatios.get(String(it.a).trim()))}</div>`).join('\n');
   if (kind === 'videos') {
@@ -167,6 +184,18 @@ function mediaBlock(kind, arg, items, ctx) {
     return `<div class="media-grid cols-${cols}" style="--ratio: ${esc(ratio)}">${items.map(it => {
       const src = ctx.mediaPath ? ctx.mediaPath(it.a) : it.a;
       return `<figure class="still"><a href="${esc(src)}"><img src="${esc(src)}" alt="${esc(it.b)}" loading="lazy" decoding="async"></a></figure>`;
+    }).join('')}</div>`;
+  }
+  if (kind === 'row') {
+    return `<div class="media-row">${items.map(it => {
+      if (/\.(jpe?g|png|webp|gif)$/i.test(it.a)) {
+        const size = ctx.folder && imageSize(path.join(ctx.folder, it.a));
+        const r = size ? size.w / size.h : 4 / 3;
+        const src = ctx.mediaPath ? ctx.mediaPath(it.a) : it.a;
+        return `<div class="media-cell" style="flex-grow: ${r.toFixed(4)}"><figure class="still" style="--ratio: ${r.toFixed(4)}"><a href="${esc(src)}"><img src="${esc(src)}" alt="${esc(it.b)}" loading="lazy" decoding="async"></a></figure></div>`;
+      }
+      const ratio = filmRatios.get(it.a) || '16 / 9';
+      return `<div class="media-cell" style="flex-grow: ${ratioNumber(ratio).toFixed(4)}">${embed(it.a, it.b, ratio)}</div>`;
     }).join('')}</div>`;
   }
   return '';
@@ -207,13 +236,13 @@ function loadProjects() {
 
 const projects = loadProjects();
 // Look up every film's and `::: video` clip's shape before rendering, so wide or tall films aren't letterboxed.
-const clipSpecs = p => [...p.body.matchAll(/^:::\s*video\b[^\n]*\n([\s\S]*?)^:::/gm)]
-  .flatMap(m => m[1].split('\n').map(l => l.split('|')[0].trim()).filter(Boolean));
+const clipSpecs = p => [...p.body.matchAll(/^:::\s*(?:video|row)\b[^\n]*\n([\s\S]*?)^:::/gm)]
+  .flatMap(m => m[1].split('\n').map(l => l.split('|')[0].trim()).filter(a => a && !/\.(jpe?g|png|webp|gif)$/i.test(a)));
 await Promise.all([...new Set(projects.flatMap(p => [p.vimeo, ...clipSpecs(p)].filter(Boolean).map(v => String(v).trim())))]
   .map(async spec => { const r = await vimeoRatio(spec); if (r) filmRatios.set(spec, r); }));
 for (const p of projects) {
   p.ratio = parseRatio(p.data.ratio) || filmRatios.get(String(p.vimeo).trim()) || '16 / 9';
-  p.bodyHtml = markdown(p.body, { mediaPath: p.mediaPath });
+  p.bodyHtml = markdown(p.body, { mediaPath: p.mediaPath, folder: p.folder });
   console.log(`  ${p.slug}: ${p.ratio}${clipSpecs(p).map(c => `, ${c}: ${filmRatios.get(c) || '16 / 9'}`).join('')}`);
 }
 // Asset URLs carry a fingerprint of the file so browsers never run an old copy after an update.

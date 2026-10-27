@@ -53,6 +53,11 @@ art-2.jpg | Caption
 111111111 | First clip
 222222222 | Second clip
 :::
+
+::: row                    ← videos and pictures side by side, sized to the same height
+111111111 | Clip caption
+photo.jpg | Description of the photo
+:::
 ```
 
 Add `draft: true` to hide a project without deleting it.
