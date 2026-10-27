@@ -28,7 +28,7 @@ art-jar-final.jpg | Finished frame: a glowing yellow butterfly inside a corked g
 
 ::: row
 759674743/f8f9341a81 | Early animation test, proof of concept
-759663461/e13d44fa8f | Compositing pass 3
+759663461/e13d44fa8f | Wing animation
 :::
 
 ::: row
