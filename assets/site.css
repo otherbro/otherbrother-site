@@ -123,7 +123,6 @@ body.home { background: var(--navy); color: var(--on-dark); }
   transition: transform 0.45s var(--ease), visibility 0.45s;
 }
 .sheet.is-open { transform: translateY(0); visibility: visible; }
-.sheet-handle { width: 48px; height: 5px; border-radius: 3px; background: #A9B6E0; margin: 0 auto 8px; }
 .sheet-close { position: absolute; top: 14px; right: clamp(16px, 3vw, 40px); background: none; border: 0; color: var(--ink); font-size: 15px; font-weight: 500; padding: 12px 4px; cursor: pointer; }
 .sheet-inner { padding-top: 32px; display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
 .sheet-title { margin: 0 0 8px; font-size: var(--h2); font-weight: 600; line-height: 1.08; letter-spacing: -0.02em; }

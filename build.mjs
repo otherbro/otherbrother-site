@@ -252,7 +252,6 @@ const orgLd = () => ({
 });
 
 const sheetShell = (id, label, inner) => `<section class="sheet" id="sheet-${id}" role="dialog" aria-modal="true" aria-label="${esc(label)}" tabindex="-1">
-  <div class="sheet-handle" aria-hidden="true"></div>
   <button type="button" class="sheet-close" data-close>Close <span aria-hidden="true">↓</span></button>
   <div class="sheet-inner">
 ${inner}
