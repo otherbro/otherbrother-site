@@ -10,8 +10,8 @@ Ever wonder what happens behind the scenes? This lil' pup explains the process i
 ### Behind the scenes
 
 ::: row
-1239984315/b7188211b8 | Lip sync animation
 bts-puppet-green-screen.jpg | Brother Pup, a shaggy grey puppet in a red collar, sitting on the green screen set with his tail wire anchored to a wood block
+1239984315/b7188211b8 | Lip sync animation
 :::
 
 ::: video
