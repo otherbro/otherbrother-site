@@ -9,7 +9,7 @@ This sting reel covers a collection of clips from our many award-winning MOA/MOD
 
 Our flagship VYVGART video made it through all of the legal reviews from storyboard through to final video with no major revisions.
 
-The audience feedback was overwhelmingly positive. Many patients reported that they felt heard and respected and that they had never seen a video like this before. Our animations talked to them, not at them. We were able to present complex ideas in a way that was clear, beneficial and engaging.
+The audience feedback was overwhelmingly positive. Many patients reported that they felt heard and respected and that they had never seen a video like this before. Our animations spoke to them, not at them. We were able to present complex ideas in a way that was clear, beneficial and engaging.
 
 ### Awards & accolades
 
