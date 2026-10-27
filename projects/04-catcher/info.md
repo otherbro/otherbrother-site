@@ -26,12 +26,12 @@ art-jar-final.jpg | Finished frame: a glowing yellow butterfly inside a corked g
 
 ### Behind the scenes
 
-::: video
+::: row
 759674743/f8f9341a81 | Early animation test, proof of concept
+759663461/e13d44fa8f | Compositing pass 3
 :::
 
-::: videos
-759663218/b26a7bd5cb | Compositing pass 1
+::: row
 759680478/b39f3c8e2b | Compositing pass 2
-759663461/e13d44fa8f | Compositing pass 3
+759663218/b26a7bd5cb | Compositing pass 1
 :::
