@@ -13,7 +13,7 @@ Ever wonder what happens behind the scenes? This lil' pup explains the process i
 1239980558/ae67287a26 | Animatic
 :::
 
-::: video
+::: video center
 1239984315/b7188211b8 | Lip sync animation
 :::
 
