@@ -54,15 +54,13 @@
       lightbox.setAttribute('aria-modal', 'true');
       lightbox.setAttribute('aria-label', 'Photo');
       lightbox.hidden = true;
-      lightbox.innerHTML = '<button type="button" class="lightbox-close">Close <span aria-hidden="true">✕</span></button><img alt=""><p class="lightbox-caption"></p>';
+      lightbox.innerHTML = '<button type="button" class="lightbox-close">Close <span aria-hidden="true">✕</span></button><img alt="">';
       lightbox.addEventListener('click', e => { if (e.target.tagName !== 'IMG') closeLightbox(); });
       document.body.appendChild(lightbox);
     }
     const img = $('img', link);
-    const alt = img ? img.alt : '';
     $('img', lightbox).src = link.href;
-    $('img', lightbox).alt = alt;
-    $('.lightbox-caption', lightbox).textContent = alt;
+    $('img', lightbox).alt = img ? img.alt : '';
     lightboxReturn = link;
     lightbox.hidden = false;
     $('.lightbox-close', lightbox).focus({ preventScroll: true });

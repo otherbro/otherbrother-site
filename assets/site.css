@@ -128,8 +128,7 @@ body.home { background: var(--navy); color: var(--on-dark); }
   padding: 64px var(--gutter);
 }
 .lightbox[hidden] { display: none; }
-.lightbox img { max-width: 100%; max-height: calc(100% - 32px); object-fit: contain; border-radius: 6px; }
-.lightbox-caption { margin: 0; max-width: 70ch; font-size: 15px; color: #C3CCF5; text-align: center; }
+.lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; }
 .lightbox-close { position: absolute; top: 16px; right: var(--gutter); background: none; border: 0; color: var(--on-dark); font-size: 16px; font-weight: 600; padding: 12px 4px; cursor: pointer; }
 
 .scrim { position: fixed; inset: 0; z-index: 20; background: rgba(5, 10, 31, 0.55); opacity: 0; pointer-events: none; transition: opacity 0.35s ease; }
