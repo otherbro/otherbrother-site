@@ -5,7 +5,7 @@ tech: MOA/MOD film · 2D
 description: "Award-winning 2D MOA/MOD animation for VYVGART by Other Brother, a pharma and healthcare animation studio. Passed every legal review from storyboard to final with no major revisions."
 ---
 
-This sting reel covers a collection of clips from our many award-winning MOA/MOD videos explaining the intricacies of generalized myasthenia gravis, CIDP, and other auto-immune diseases and how they affect those who suffer from them. These animations captivates viewers' attention and makes the science behind the treatment clear and memorable.
+This sting reel covers a collection of clips from our many award-winning MOA/MOD videos explaining the intricacies of generalized myasthenia gravis, CIDP, and other auto-immune diseases and how they affect those who suffer from them. These animations captivate viewers' attention and makes the science behind the treatment clear and memorable.
 
 Our flagship VYVGART video made it through all of the legal reviews from storyboard through to final video with no major revisions.
 
