@@ -42,6 +42,45 @@
     if (e.target.closest('[data-close]')) { e.preventDefault(); closeSheet(); }
   });
 
+  // ------------------------------------------------------------ photo viewer
+  // Photos in write-ups open over the page instead of navigating to the bare image file.
+  let lightbox = null;
+  let lightboxReturn = null;
+  function openLightbox(link) {
+    if (!lightbox) {
+      lightbox = document.createElement('div');
+      lightbox.className = 'lightbox';
+      lightbox.setAttribute('role', 'dialog');
+      lightbox.setAttribute('aria-modal', 'true');
+      lightbox.setAttribute('aria-label', 'Photo');
+      lightbox.hidden = true;
+      lightbox.innerHTML = '<button type="button" class="lightbox-close">Close <span aria-hidden="true">✕</span></button><img alt=""><p class="lightbox-caption"></p>';
+      lightbox.addEventListener('click', e => { if (e.target.tagName !== 'IMG') closeLightbox(); });
+      document.body.appendChild(lightbox);
+    }
+    const img = $('img', link);
+    const alt = img ? img.alt : '';
+    $('img', lightbox).src = link.href;
+    $('img', lightbox).alt = alt;
+    $('.lightbox-caption', lightbox).textContent = alt;
+    lightboxReturn = link;
+    lightbox.hidden = false;
+    $('.lightbox-close', lightbox).focus({ preventScroll: true });
+  }
+  function closeLightbox() {
+    if (!lightbox || lightbox.hidden) return false;
+    lightbox.hidden = true;
+    $('img', lightbox).removeAttribute('src');
+    if (lightboxReturn) lightboxReturn.focus({ preventScroll: true });
+    return true;
+  }
+  document.addEventListener('click', e => {
+    const link = e.target.closest('.still a');
+    if (!link || e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
+    e.preventDefault();
+    openLightbox(link);
+  });
+
   // ------------------------------------------------------------ project page film
   const film = $('.film[data-film]');
   if (film) {
@@ -178,6 +217,7 @@
   // ------------------------------------------------------------ keyboard + deep links
   document.addEventListener('keydown', e => {
     if (e.key !== 'Escape') return;
+    if (closeLightbox()) return;
     if (player && !player.hidden) closePlayer();
     else closeSheet();
   });
