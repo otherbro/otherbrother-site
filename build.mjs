@@ -333,7 +333,7 @@ ${slides.map((s, k) => `    <div class="slide${k === 0 ? ' is-active' : ''}" dat
   </div>
   <button type="button" class="stage-hit" data-play aria-label="Play ${esc(first ? first.title : 'film')}"></button>
   <header class="topbar">
-    <a class="logo" href="${href('/')}">${esc(site.name)}</a>
+    <a class="logo" href="${href('/')}" aria-label="${esc(site.name)}, home"><span class="logo-mark" aria-hidden="true"></span><span class="visually-hidden">${esc(site.name)}</span></a>
     <span class="counter" aria-live="polite"><span data-counter>01</span> / ${pad(projects.length)}</span>
   </header>
   ${arrow('prev', 'Previous project')}
@@ -402,7 +402,7 @@ function projectPage(p, k) {
   return `${head({ title: `${p.title} — ${site.name}`, description: p.description || site.description, url: p.url, image: p.poster ? p.url + p.poster : '', jsonld })}
 <body class="project">
 <header class="page-header">
-  <a class="logo" href="${href('/')}">${esc(site.name)}</a>
+  <a class="logo" href="${href('/')}" aria-label="${esc(site.name)}, home"><span class="logo-mark" aria-hidden="true"></span><span class="visually-hidden">${esc(site.name)}</span></a>
   <nav aria-label="Main"><a href="${href('/')}">Work</a><a href="${href('/#about')}">About</a><a href="${href('/#contact')}">Contact</a></nav>
 </header>
 <main class="project-main">
