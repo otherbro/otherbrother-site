@@ -1,13 +1,13 @@
 ---
-title: "VYVGART: Up Close"
+title: "VYVGART Videos"
 tech: MOA/MOD film · 2D
 # vimeo: add the claims-free cut's Vimeo ID here when it's ready, e.g. "123456789"
 description: "Award-winning 2D MOA/MOD animation for VYVGART by Other Brother, a pharma and healthcare animation studio. Passed every legal review from storyboard to final with no major revisions."
 ---
 
-This award-winning MOA/MOD video explains the intricacies of anti-AChR antibody positive generalized myasthenia gravis and how it affects those who suffer from the rare auto-immune disease in a way that captivates viewers' attention and makes the science behind the treatment clear and memorable.
+This sting reel covers a collection of clips from our many award-winning MOA/MOD videos explaining the intricacies of generalized myasthenia gravis, CIDP, and other auto-immune diseases and how they affect those who suffer from them. These animations captivates viewers' attention and makes the science behind the treatment clear and memorable.
 
-This video made it through all of the legal reviews from storyboard through to final video with no major revisions.
+Our flagship VYVGART video made it through all of the legal reviews from storyboard through to final video with no major revisions.
 
 ### Client objective
 
@@ -25,7 +25,7 @@ We focused on what we heard from patient feedback and designed a clear and conci
 
 #### A New Effective Way to Make Pharma Videos
 
-The audience feedback was overwhelmingly positive. Several patients reported that they felt heard and respected and that they had never seen a video like this before. "VYVGART up close" talked to them, not at them. It was not overly sterile and clinical nor did it bury them in science information or technical renderings. It simply states the problem and a treatment that could be beneficial in a clear and engaging way.
+The audience feedback was overwhelmingly positive. Many patients reported that they felt heard and respected and that they had never seen a video like this before. Our animations talked to them, not at them all in a way that was clear, beneficial and engaging.
 
 ### Awards & accolades
 
