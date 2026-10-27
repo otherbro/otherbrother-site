@@ -228,7 +228,8 @@ body.plain { background: var(--sheet); }
     align-items: center; gap: 10px 8px; padding: 10px var(--gutter) max(14px, env(safe-area-inset-bottom));
   }
   .bb-left { grid-area: left; min-width: 0; gap: 12px; }
-  .bb-left .glass-circle { width: 44px; height: 44px; }
+  .bb-left .play-btn { position: fixed; z-index: 3; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 72px; height: 72px; }
+  .bb-left .play-btn svg { width: 26px; height: 26px; }
   .now-title { font-size: 16px; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .bottombar .glass-pill { grid-area: pill; justify-self: start; padding: 8px 16px; font-size: 14px; }
   .bb-nav { grid-area: nav; min-width: 0; gap: 0; justify-content: flex-end; }

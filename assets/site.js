@@ -132,7 +132,7 @@
       const el = slideEls[k];
       const v = document.createElement('video');
       v.muted = true; v.defaultMuted = true; v.playsInline = true; v.loop = true; v.autoplay = true;
-      v.setAttribute('muted', ''); v.setAttribute('playsinline', ''); v.setAttribute('aria-hidden', 'true');
+      v.setAttribute('muted', ''); v.setAttribute('playsinline', ''); v.setAttribute('autoplay', ''); v.setAttribute('aria-hidden', 'true');
       v.preload = 'auto';
       if (s.poster) v.poster = s.poster;
       v.addEventListener('loadedmetadata', () => { durations[k] = v.duration; if (k === i) restartTimer(); });
@@ -176,6 +176,16 @@
       const v = $('video', slideEls[i]); if (v) v.play().catch(() => {});
       restartTimer();
     };
+
+    // iPhones in Low Power Mode (and some data-saving settings) refuse muted autoplay
+    // but allow playback after a touch, so the first tap or swipe starts the loop.
+    const resumeLoop = () => {
+      if (openSheetEl || !player.hidden || reduceMotion) return;
+      const v = $('video', slideEls[i]);
+      if (v && v.paused) v.play().catch(() => {});
+    };
+    document.addEventListener('touchend', resumeLoop, { passive: true });
+    document.addEventListener('click', resumeLoop);
 
     playButtons.forEach(b => b.addEventListener('click', openPlayer));
     $('[data-close-player]').addEventListener('click', closePlayer);
