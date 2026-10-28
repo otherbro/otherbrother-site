@@ -95,8 +95,9 @@ async function vimeoRatio(spec) {
     return width && height ? `${width} / ${height}` : '';
   } catch { return ''; }
 }
-// Filled in at build start for every film and `::: video` clip (see vimeoRatios below).
+// Filled in at build start for every film and `::: video` / `::: row` clip (see clipSpecs below).
 const filmRatios = new Map();
+const IMAGE_FILE = /\.(jpe?g|png|webp|gif)$/i;
 function embed(spec, title, ratio = '') {
   return `<figure class="embed"><div class="embed-frame"${ratio ? ` style="--video-ratio: ${esc(ratio)}"` : ''}><iframe src="${esc(vimeoSrc(spec))}" title="${esc(title || 'Video')}" loading="lazy" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>${title ? `<figcaption>${inline(title)}</figcaption>` : ''}</figure>`;
 }
@@ -172,7 +173,8 @@ function imageSize(file) {
 const ratioNumber = r => { const [w, h] = String(r).split('/').map(Number); return w > 0 && h > 0 ? w / h : 16 / 9; };
 
 function mediaBlock(kind, arg, items, ctx) {
-  if (kind === 'video') return items.map(it => `<div class="media-wide${arg === 'center' ? ' is-centered' : ''}">${embed(it.a, it.b, filmRatios.get(String(it.a).trim()))}</div>`).join('\n');
+  const img = it => `<img src="${esc(ctx.mediaPath ? ctx.mediaPath(it.a) : it.a)}" alt="${esc(it.b)}" loading="lazy" decoding="async">`;
+  if (kind === 'video') return items.map(it => `<div class="media-wide${arg === 'center' ? ' is-centered' : ''}">${embed(it.a, it.b, filmRatios.get(it.a))}</div>`).join('\n');
   if (kind === 'videos') {
     const cols = items.length === 2 || items.length === 4 ? 2 : 3;
     const style = arg ? ` style="--video-ratio: ${esc(arg)}"` : '';
@@ -181,18 +183,15 @@ function mediaBlock(kind, arg, items, ctx) {
   if (kind === 'images') {
     const ratio = arg || '4/3';
     const cols = items.length === 1 ? 1 : items.length === 2 || items.length === 4 ? 2 : 3;
-    return `<div class="media-grid cols-${cols}" style="--ratio: ${esc(ratio)}">${items.map(it => {
-      const src = ctx.mediaPath ? ctx.mediaPath(it.a) : it.a;
-      return `<figure class="still"><a href="${esc(src)}"><img src="${esc(src)}" alt="${esc(it.b)}" loading="lazy" decoding="async"></a></figure>`;
-    }).join('')}</div>`;
+    return `<div class="media-grid cols-${cols}" style="--ratio: ${esc(ratio)}">${items.map(it =>
+      `<figure class="still"><a href="${esc(ctx.mediaPath ? ctx.mediaPath(it.a) : it.a)}">${img(it)}</a></figure>`).join('')}</div>`;
   }
   if (kind === 'row') {
     return `<div class="media-row">${items.map(it => {
-      if (/\.(jpe?g|png|webp|gif)$/i.test(it.a)) {
+      if (IMAGE_FILE.test(it.a)) {
         const size = ctx.folder && imageSize(path.join(ctx.folder, it.a));
         const r = size ? size.w / size.h : 4 / 3;
-        const src = ctx.mediaPath ? ctx.mediaPath(it.a) : it.a;
-        return `<div class="media-cell" style="flex-grow: ${r.toFixed(4)}"><figure class="still" style="--ratio: ${r.toFixed(4)}"><img src="${esc(src)}" alt="${esc(it.b)}" loading="lazy" decoding="async"></figure></div>`;
+        return `<div class="media-cell" style="flex-grow: ${r.toFixed(4)}"><figure class="still" style="--ratio: ${r.toFixed(4)}">${img(it)}</figure></div>`;
       }
       const ratio = filmRatios.get(it.a) || '16 / 9';
       return `<div class="media-cell" style="flex-grow: ${ratioNumber(ratio).toFixed(4)}">${embed(it.a, it.b, ratio)}</div>`;
@@ -237,11 +236,11 @@ function loadProjects() {
 const projects = loadProjects();
 // Look up every film's and `::: video` clip's shape before rendering, so wide or tall films aren't letterboxed.
 const clipSpecs = p => [...p.body.matchAll(/^:::\s*(?:video|row)\b[^\n]*\n([\s\S]*?)^:::/gm)]
-  .flatMap(m => m[1].split('\n').map(l => l.split('|')[0].trim()).filter(a => a && !/\.(jpe?g|png|webp|gif)$/i.test(a)));
-await Promise.all([...new Set(projects.flatMap(p => [p.vimeo, ...clipSpecs(p)].filter(Boolean).map(v => String(v).trim())))]
+  .flatMap(m => m[1].split('\n').map(l => l.split('|')[0].trim()).filter(a => a && !IMAGE_FILE.test(a)));
+await Promise.all([...new Set(projects.flatMap(p => [p.vimeo, ...clipSpecs(p)].filter(Boolean)))]
   .map(async spec => { const r = await vimeoRatio(spec); if (r) filmRatios.set(spec, r); }));
 for (const p of projects) {
-  p.ratio = parseRatio(p.data.ratio) || filmRatios.get(String(p.vimeo).trim()) || '16 / 9';
+  p.ratio = parseRatio(p.data.ratio) || filmRatios.get(p.vimeo) || '16 / 9';
   p.bodyHtml = markdown(p.body, { mediaPath: p.mediaPath, folder: p.folder });
   console.log(`  ${p.slug}: ${p.ratio}${clipSpecs(p).map(c => `, ${c}: ${filmRatios.get(c) || '16 / 9'}`).join('')}`);
 }
@@ -329,7 +328,6 @@ function homePage() {
   const slides = projects.map(p => ({
     slug: p.slug,
     title: p.title,
-    tech: p.tech,
     page: href(p.url),
     poster: p.poster ? href(p.url + p.poster) : '',
     loop: p.loop ? href(p.url + p.loop) : '',
@@ -405,7 +403,7 @@ ${slides.map((s, k) => `    <div class="slide${k === 0 ? ' is-active' : ''}" dat
 </main>
 
 <div class="player" role="dialog" aria-modal="true" aria-label="Film player" hidden>
-  <button type="button" class="player-close" data-close-player>Close <span aria-hidden="true">✕</span></button>
+  <button type="button" class="overlay-close" data-close-player>Close <span aria-hidden="true">✕</span></button>
   <div class="player-frame"></div>
   <p class="player-title" data-player-title></p>
 </div>

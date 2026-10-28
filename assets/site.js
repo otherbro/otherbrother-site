@@ -5,14 +5,20 @@
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const isPhone = () => window.matchMedia('(max-width: 820px)').matches;
 
+  // Vimeo player iframe, for the project-page film and the homepage player.
+  const vimeoFrame = (src, title) => {
+    const f = document.createElement('iframe');
+    f.src = src; f.title = title; f.allow = 'autoplay; fullscreen; picture-in-picture'; f.allowFullscreen = true;
+    return f;
+  };
+
   // Media the build marked data-src (sheet contents, later slide posters) loads on demand.
   const loadDeferred = el => $$('[data-src]', el).forEach(m => { m.src = m.dataset.src; m.removeAttribute('data-src'); });
 
   // ------------------------------------------------------------ sheets
   let openSheetEl = null;
   let lastFocus = null;
-  const listeners = [];
-  const onSheetChange = fn => listeners.push(fn);
+  let afterSheetClose = () => {};
 
   function openSheet(name, { updateHash = true } = {}) {
     const el = document.getElementById('sheet-' + name);
@@ -26,7 +32,6 @@
     if (updateHash) history.replaceState(null, '', '#' + name);
     // phones hide the Close button (swipe down instead), so focus the sheet itself there
     setTimeout(() => { const c = $('.sheet-close', el); (c && c.offsetParent ? c : el).focus({ preventScroll: true }); }, 50);
-    listeners.forEach(fn => fn(name));
   }
   function closeSheet() {
     if (!openSheetEl) return;
@@ -37,7 +42,7 @@
     openSheetEl = null;
     history.replaceState(null, '', location.pathname + location.search);
     if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
-    listeners.forEach(fn => fn(null));
+    afterSheetClose();
   }
 
   document.addEventListener('click', e => {
@@ -92,7 +97,7 @@
       lightbox.setAttribute('aria-modal', 'true');
       lightbox.setAttribute('aria-label', 'Photo');
       lightbox.hidden = true;
-      lightbox.innerHTML = '<button type="button" class="lightbox-close">Close <span aria-hidden="true">✕</span></button><img alt="">';
+      lightbox.innerHTML = '<button type="button" class="overlay-close">Close <span aria-hidden="true">✕</span></button><img alt="">';
       lightbox.addEventListener('click', e => { if (e.target.tagName !== 'IMG') closeLightbox(); });
       document.body.appendChild(lightbox);
     }
@@ -101,7 +106,7 @@
     $('img', lightbox).alt = img ? img.alt : '';
     lightboxReturn = link;
     lightbox.hidden = false;
-    $('.lightbox-close', lightbox).focus({ preventScroll: true });
+    $('.overlay-close', lightbox).focus({ preventScroll: true });
   }
   function closeLightbox() {
     if (!lightbox || lightbox.hidden) return false;
@@ -120,15 +125,7 @@
   // ------------------------------------------------------------ project page film
   const film = $('.film[data-film]');
   if (film) {
-    $('[data-film-play]', film).addEventListener('click', () => {
-      const f = document.createElement('iframe');
-      f.src = film.dataset.film;
-      f.allow = 'autoplay; fullscreen; picture-in-picture';
-      f.allowFullscreen = true;
-      f.title = document.title;
-      film.innerHTML = '';
-      film.appendChild(f);
-    });
+    $('[data-film-play]', film).addEventListener('click', () => film.replaceChildren(vimeoFrame(film.dataset.film, document.title)));
   }
 
   // ------------------------------------------------------------ homepage
@@ -196,10 +193,7 @@
     function openPlayer() {
       const s = slides[i];
       if (!s.film) { location.href = s.page; return; }
-      playerFrame.innerHTML = '';
-      const f = document.createElement('iframe');
-      f.src = s.film; f.allow = 'autoplay; fullscreen; picture-in-picture'; f.allowFullscreen = true; f.title = s.title;
-      playerFrame.appendChild(f);
+      playerFrame.replaceChildren(vimeoFrame(s.film, s.title));
       playerTitle.textContent = s.title;
       playerFrame.style.setProperty('--ratio', s.ratio || '16 / 9');
       player.style.setProperty('--player-bg', s.poster ? `url("${s.poster}")` : 'none');
@@ -255,7 +249,7 @@
       if (e.key === 'ArrowLeft') show(i - 1);
     });
     document.addEventListener('visibilitychange', () => { if (!document.hidden) restartTimer(); });
-    onSheetChange(name => { if (!name) restartTimer(); });
+    afterSheetClose = restartTimer;
 
     // deep link like /#info-catcher starts on that project
     const startSlug = location.hash.startsWith('#info-') ? location.hash.slice(6) : '';
