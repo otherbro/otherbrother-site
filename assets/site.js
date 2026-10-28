@@ -135,7 +135,6 @@
   if (dataEl) {
     const slides = JSON.parse(dataEl.textContent);
     const slideEls = $$('.slide');
-    const counterEl = $('[data-counter]');
     const titleEl = $('[data-title]');
     const pageLink = $('[data-page]');
     const playButtons = $$('[data-play]');
@@ -144,7 +143,6 @@
     const playerFrame = $('.player-frame');
     const playerTitle = $('[data-player-title]');
     const durations = {};
-    const pad = n => String(n).padStart(2, '0');
     let i = 0;
     let timer = null;
 
@@ -180,7 +178,6 @@
       i = (k + slides.length) % slides.length;
       const s = slides[i];
       slideEls.forEach((el, n) => el.classList.toggle('is-active', n === i));
-      counterEl.textContent = pad(i + 1);
       titleEl.textContent = s.title;
       pageLink.href = s.page;
       pageLink.dataset.sheet = 'info-' + s.slug;

@@ -92,7 +92,9 @@ body.home { position: fixed; inset: 0; overflow: hidden; overscroll-behavior: no
   -webkit-mask: url("logo.png") no-repeat center / contain; mask: url("logo.png") no-repeat center / contain;
 }
 .topbar .logo { filter: drop-shadow(0 1px 10px rgba(34, 12, 64, 0.55)); }
-.counter { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--on-dark-soft); }
+.top-nav { pointer-events: auto; display: flex; gap: 4px; }
+.top-nav a { color: var(--on-dark); font-size: 16px; font-weight: 600; text-decoration: none; padding: 12px; }
+.top-nav a:last-child { padding-right: 0; }
 
 .bottombar {
   position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; pointer-events: none;
@@ -100,10 +102,8 @@ body.home { position: fixed; inset: 0; overflow: hidden; overscroll-behavior: no
   padding: 14px var(--gutter) 18px; text-shadow: var(--shadow-text);
 }
 .bottombar > * { pointer-events: auto; }
-.bb-left { flex: 1 1 0; min-width: 220px; display: flex; align-items: center; gap: 14px; }
+.bb-left { flex: 1 1 0; min-width: 0; display: flex; align-items: center; gap: 14px; }
 .now-title { font-size: 17px; font-weight: 600; }
-.bb-nav { flex: 1 1 0; min-width: 220px; display: flex; justify-content: flex-end; gap: 4px; }
-.bb-nav a { color: var(--on-dark); font-size: 16px; font-weight: 600; text-decoration: none; padding: 12px; }
 
 /* film player overlay */
 .player {
@@ -235,12 +235,10 @@ body.plain { background: var(--sheet); }
   .bb-left .play-btn svg { width: 18px; height: 18px; }
   .now-title { display: none; }
   .bottombar .glass-pill { grid-area: pill; justify-self: end; display: inline-flex; align-items: center; height: 44px; padding: 0 18px; font-size: 15px; }
-  /* Menu / About / Contact sit top right, level with the logo, where the page count is on desktop */
-  .bb-nav { position: fixed; z-index: 3; top: 20px; right: var(--gutter); height: 55px; min-width: 0; gap: 0; align-items: center; }
-  .bb-nav a { font-size: 15px; padding: 10px 8px; }
-  .counter { display: none; }
+  .top-nav { gap: 0; }
+  .top-nav a { font-size: 15px; padding: 10px 8px; }
+  .top-nav a:last-child { padding-right: 0; }
   .sheet-close { display: none; }
-  .bb-nav a:last-child { padding-right: 0; }
   .media-grid.cols-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 520px) {

@@ -342,7 +342,6 @@ function homePage() {
     ratio: p.ratio,
   }));
   const first = projects[0];
-  const pad = n => String(n).padStart(2, '0');
 
   const aboutBody = about.body.split(/\n(?=###\s)/);
   const intro = aboutBody[0];
@@ -391,21 +390,20 @@ ${slides.map((s, k) => `    <div class="slide${k === 0 ? ' is-active' : ''}" dat
   <button type="button" class="stage-hit" data-play aria-label="Play ${esc(first ? first.title : 'film')}"></button>
   <header class="topbar">
     <a class="logo" href="${href('/')}" aria-label="${esc(site.name)}, home"><span class="logo-mark" aria-hidden="true"></span><span class="visually-hidden">${esc(site.name)}</span></a>
-    <span class="counter" aria-live="polite"><span data-counter>01</span> / ${pad(projects.length)}</span>
+    <nav class="top-nav" aria-label="Main">
+      <a href="#work" data-sheet="work">Menu</a>
+      <a href="#about" data-sheet="about">About</a>
+      <a href="#contact" data-sheet="contact">Contact</a>
+    </nav>
   </header>
   ${arrow('prev', 'Previous project')}
   ${arrow('next', 'Next project')}
   <footer class="bottombar">
     <div class="bb-left">
       <button type="button" class="glass-circle play-btn" data-play aria-label="Play film">${ICON_PLAY}</button>
-      <span class="now-title" data-title>${inline(first ? first.title : '')}</span>
+      <span class="now-title" data-title aria-live="polite">${inline(first ? first.title : '')}</span>
     </div>
     <a class="glass-pill" href="${first ? href(first.url) : '#'}" data-page${first ? ` data-sheet="info-${first.slug}"` : ''}>Project info</a>
-    <nav class="bb-nav" aria-label="Main">
-      <a href="#work" data-sheet="work">Menu</a>
-      <a href="#about" data-sheet="about">About</a>
-      <a href="#contact" data-sheet="contact">Contact</a>
-    </nav>
   </footer>
 </main>
 
