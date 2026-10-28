@@ -235,6 +235,8 @@
     // swipe left / right on phones
     let touchX = null, touchY = null;
     const stage = $('#stage');
+    // a drag on the slideshow is only ever a left/right swipe, never a page scroll or pull-to-refresh
+    stage.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
     stage.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; touchY = e.touches[0].clientY; }, { passive: true });
     stage.addEventListener('touchend', e => {
       if (touchX === null) return;
