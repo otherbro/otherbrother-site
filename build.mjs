@@ -404,6 +404,7 @@ ${slides.map((s, k) => `    <div class="slide${k === 0 ? ' is-active' : ''}" dat
       <span class="now-title" data-title aria-live="polite">${inline(first ? first.title : '')}</span>
     </div>
     <a class="glass-pill" href="${first ? href(first.url) : '#'}" data-page${first ? ` data-sheet="info-${first.slug}"` : ''}>Project info</a>
+    <span class="counter" aria-hidden="true"><span data-counter>01</span> / ${String(projects.length).padStart(2, '0')}</span>
   </footer>
 </main>
 

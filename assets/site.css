@@ -103,7 +103,8 @@ body.home { position: fixed; inset: 0; overflow: hidden; overscroll-behavior: no
 }
 .bottombar > * { pointer-events: auto; }
 .bb-left { flex: 1 1 0; min-width: 0; display: flex; align-items: center; gap: 14px; }
-.now-title { font-size: 17px; font-weight: 600; }
+.now-title { min-width: 0; font-size: 17px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.counter { flex: 1 1 0; text-align: right; font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--on-dark-soft); }
 
 /* film player overlay */
 .player {
@@ -227,15 +228,16 @@ body.plain { background: var(--sheet); }
   .arrow { width: 56px; height: 96px; }
   .glass-chevron { width: 40px; height: 40px; }
   .bottombar {
-    display: grid; grid-template-columns: auto 1fr; grid-template-areas: "play pill";
+    display: grid; grid-template-columns: 1fr auto 1fr; grid-template-areas: "play pill counter";
     align-items: center; gap: 10px 8px; padding: 10px var(--gutter) max(14px, env(safe-area-inset-bottom));
   }
   .bb-left { display: contents; }
   .bb-left .play-btn { grid-area: play; width: 46px; height: 46px; }
   .bb-left .play-btn svg { width: 18px; height: 18px; }
   .now-title { display: none; }
-  .bottombar .glass-pill { grid-area: pill; justify-self: end; display: inline-flex; align-items: center; height: 44px; padding: 0 18px; font-size: 15px; }
+  .bottombar .glass-pill { grid-area: pill; justify-self: center; display: inline-flex; align-items: center; height: 44px; padding: 0 18px; font-size: 15px; }
   .top-nav { gap: 0; }
+  .counter { grid-area: counter; font-size: 15px; }
   .top-nav a { font-size: 15px; padding: 10px 8px; }
   .top-nav a:last-child { padding-right: 0; }
   .sheet-close { display: none; }
