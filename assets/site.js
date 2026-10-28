@@ -21,7 +21,8 @@
     el.classList.add('is-open');
     document.body.classList.add('sheet-open');
     if (updateHash) history.replaceState(null, '', '#' + name);
-    setTimeout(() => { const c = $('.sheet-close', el); if (c) c.focus({ preventScroll: true }); }, 50);
+    // phones hide the Close button (swipe down instead), so focus the sheet itself there
+    setTimeout(() => { const c = $('.sheet-close', el); (c && c.offsetParent ? c : el).focus({ preventScroll: true }); }, 50);
     listeners.forEach(fn => fn(name));
   }
   function closeSheet() {
@@ -41,6 +42,40 @@
     if (opener) { e.preventDefault(); openSheet(opener.dataset.sheet); return; }
     if (e.target.closest('[data-close]')) { e.preventDefault(); closeSheet(); }
   });
+
+  // Swipe an open sheet down to close it. The drag only starts when the sheet is scrolled
+  // to the top, so swiping down inside a long sheet still scrolls it first.
+  let drag = null;
+  document.addEventListener('touchstart', e => {
+    const sheet = e.target.closest('.sheet.is-open');
+    drag = sheet && sheet.scrollTop <= 0 ? { sheet, x: e.touches[0].clientX, y: e.touches[0].clientY, t: Date.now(), dy: 0, active: false } : null;
+  }, { passive: true });
+  document.addEventListener('touchmove', e => {
+    if (!drag) return;
+    const dx = e.touches[0].clientX - drag.x;
+    const dy = e.touches[0].clientY - drag.y;
+    if (!drag.active) {
+      if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+      if (dy <= Math.abs(dx) || drag.sheet.scrollTop > 0) { drag = null; return; }
+      drag.active = true;
+      drag.sheet.style.transition = 'none';
+    }
+    e.preventDefault();
+    drag.dy = Math.max(0, dy);
+    drag.sheet.style.transform = `translateY(${drag.dy}px)`;
+  }, { passive: false });
+  const endDrag = () => {
+    if (!drag) return;
+    const { sheet, dy, t, active } = drag;
+    drag = null;
+    if (!active) return;
+    sheet.style.transition = '';
+    sheet.style.transform = '';
+    const fast = dy / Math.max(1, Date.now() - t) > 0.5;
+    if (dy > 100 || (fast && dy > 30)) closeSheet();
+  };
+  document.addEventListener('touchend', endDrag);
+  document.addEventListener('touchcancel', endDrag);
 
   // ------------------------------------------------------------ photo viewer
   // Photos in write-ups open over the page instead of navigating to the bare image file.

@@ -224,17 +224,19 @@ body.plain { background: var(--sheet); }
   .arrow { width: 56px; height: 96px; }
   .glass-chevron { width: 40px; height: 40px; }
   .bottombar {
-    display: grid; grid-template-columns: auto 1fr; grid-template-areas: "pill nav";
+    display: grid; grid-template-columns: auto 1fr; grid-template-areas: "play pill";
     align-items: center; gap: 10px 8px; padding: 10px var(--gutter) max(14px, env(safe-area-inset-bottom));
   }
   .bb-left { display: contents; }
-  .bb-left .play-btn { position: fixed; z-index: 3; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 72px; height: 72px; }
-  .bb-left .play-btn svg { width: 26px; height: 26px; }
+  .bb-left .play-btn { grid-area: play; width: 52px; height: 52px; }
+  .bb-left .play-btn svg { width: 20px; height: 20px; }
   .now-title { display: none; }
-  .bottombar .glass-pill { grid-area: pill; justify-self: start; padding: 8px 16px; font-size: 14px; }
-  .bb-nav { grid-area: nav; min-width: 0; gap: 0; justify-content: flex-end; }
+  .bottombar .glass-pill { grid-area: pill; justify-self: end; padding: 8px 16px; font-size: 14px; }
+  /* Menu / About / Contact sit top right, level with the logo, where the page count is on desktop */
+  .bb-nav { position: fixed; z-index: 3; top: 20px; right: var(--gutter); height: 55px; min-width: 0; gap: 0; align-items: center; }
   .bb-nav a { font-size: 15px; padding: 10px 8px; }
-  .counter { font-size: 15px; }
+  .counter { display: none; }
+  .sheet-close { display: none; }
   .bb-nav a:last-child { padding-right: 0; }
   .media-grid.cols-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
