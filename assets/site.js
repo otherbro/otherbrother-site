@@ -5,6 +5,9 @@
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const isPhone = () => window.matchMedia('(max-width: 820px)').matches;
 
+  // Media the build marked data-src (sheet contents, later slide posters) loads on demand.
+  const loadDeferred = el => $$('[data-src]', el).forEach(m => { m.src = m.dataset.src; m.removeAttribute('data-src'); });
+
   // ------------------------------------------------------------ sheets
   let openSheetEl = null;
   let lastFocus = null;
@@ -17,7 +20,7 @@
     if (openSheetEl && openSheetEl !== el) openSheetEl.classList.remove('is-open');
     lastFocus = document.activeElement;
     openSheetEl = el;
-    $$('iframe[data-src]', el).forEach(f => { f.src = f.dataset.src; f.removeAttribute('data-src'); });
+    loadDeferred(el);
     el.classList.add('is-open');
     document.body.classList.add('sheet-open');
     if (updateHash) history.replaceState(null, '', '#' + name);
@@ -179,6 +182,7 @@
       i = (k + slides.length) % slides.length;
       const s = slides[i];
       slideEls.forEach((el, n) => el.classList.toggle('is-active', n === i));
+      loadDeferred(slideEls[i]); loadDeferred(slideEls[(i + 1) % slides.length]); // this poster and the next
       counterEl.textContent = String(i + 1).padStart(2, '0');
       titleEl.textContent = s.title;
       pageLink.href = s.page;

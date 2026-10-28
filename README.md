@@ -22,7 +22,7 @@ Live site: https://otherbro.github.io/otherbrother-site
    - `poster.jpg`: still frame, 1920×1080
    - `loop.mp4`: homepage loop for desktop (1920×1080, H.264, no audio, 3–5 MB)
    - `loop-mobile.mp4`: homepage loop for phones (1280×720, about 1–2 MB)
-   - any images used on the page
+   - any images used on the page (JPEG at about 80% quality, no wider than 1920 px; bigger files just slow the site down)
 3. Save. The site rebuilds.
 
 ### info.md

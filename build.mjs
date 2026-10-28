@@ -285,9 +285,7 @@ ${img ? `<meta property="og:image" content="${esc(img)}">\n<meta name="twitter:i
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0A1236">
 <link rel="icon" href="${href('/assets/favicon.svg')}" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&display=swap">
+<link rel="preload" href="${href('/assets/fonts/inter-tight-latin.woff2')}" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="${asset('/assets/site.css')}">
 <link rel="preconnect" href="https://player.vimeo.com">
 ${jsonld.map(j => `<script type="application/ld+json">${JSON.stringify(j).replace(/</g, '\\u003c')}</script>`).join('\n')}
@@ -307,10 +305,13 @@ const orgLd = () => ({
   sameAs: Object.values(site.social),
 });
 
+// Sheets are hidden until opened, and browsers still fetch "lazy" media sitting just off-screen,
+// so their images and Vimeo players carry data-src and only load when the sheet opens (site.js).
+const deferMedia = html => html.replace(/(<(?:img|iframe)\b[^>]*?)\ssrc=/g, '$1 data-src=');
 const sheetShell = (id, label, inner) => `<section class="sheet" id="sheet-${id}" role="dialog" aria-modal="true" aria-label="${esc(label)}" tabindex="-1">
   <button type="button" class="sheet-close" data-close>Close <span aria-hidden="true">↓</span></button>
   <div class="sheet-inner">
-${inner}
+${deferMedia(inner)}
   </div>
 </section>`;
 
@@ -319,15 +320,10 @@ const socialLinks = () => Object.entries(site.social)
 
 // ---------------------------------------------------------------- pages
 
-const infoSheet = (p, id, { deferVideos = false } = {}) => {
-  let body = p.bodyHtml;
-  // On the homepage every project's info is on one page, so videos load only when their sheet opens.
-  if (deferVideos) body = body.replace(/<iframe src=/g, '<iframe data-src=');
-  return sheetShell(id, `About ${p.title}`, `    <h2 class="sheet-title">${inline(p.title)}</h2>
+const infoSheet = (p, id) => sheetShell(id, `About ${p.title}`, `    <h2 class="sheet-title">${inline(p.title)}</h2>
     <div class="prose info-body">
-${body}
+${p.bodyHtml}
     </div>`);
-};
 
 function homePage() {
   const slides = projects.map(p => ({
@@ -385,7 +381,7 @@ ${projects.map((p, k) => `      <li><a class="work-item" href="${href(p.url)}" d
 <main class="stage" id="stage" aria-label="Featured work">
   <h1 class="visually-hidden">${esc(site.name)}: ${esc(site.tagline)}</h1>
   <div class="slides">
-${slides.map((s, k) => `    <div class="slide${k === 0 ? ' is-active' : ''}" data-index="${k}">${s.poster ? `<img class="slide-poster" src="${s.poster}" alt="" ${k === 0 ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async">` : ''}</div>`).join('\n')}
+${slides.map((s, k) => `    <div class="slide${k === 0 ? ' is-active' : ''}" data-index="${k}">${s.poster ? `<img class="slide-poster" ${k === 0 ? 'src' : 'data-src'}="${s.poster}" alt=""${k === 0 ? ' fetchpriority="high"' : ''} decoding="async">` : ''}</div>`).join('\n')}
   </div>
   <button type="button" class="stage-hit" data-play aria-label="Play ${esc(first ? first.title : 'film')}"></button>
   <header class="topbar">
@@ -418,7 +414,7 @@ ${slides.map((s, k) => `    <div class="slide${k === 0 ? ' is-active' : ''}" dat
 ${workSheet}
 ${aboutSheet}
 ${contactSheet}
-${projects.map(p => infoSheet(p, 'info-' + p.slug, { deferVideos: true })).join('\n')}
+${projects.map(p => infoSheet(p, 'info-' + p.slug)).join('\n')}
 
 <script id="slides-data" type="application/json">${JSON.stringify(slides).replace(/</g, '\\u003c')}</script>
 <script src="${asset('/assets/site.js')}" defer></script>
