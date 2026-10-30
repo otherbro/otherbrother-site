@@ -110,7 +110,7 @@ function embed(spec, title, ratio = '') {
 //   ::: video            one full-width Vimeo video per line:  id[/hash] | title
 //   ::: video center     same, centered (for clips narrower than the column)
 //   ::: videos 1/1       a grid of Vimeo videos, same line format (ratio optional, default 16/9)
-//   ::: images 16/9      a grid of images from the project folder:  file.jpg | alt text
+//   ::: images 16/9      a grid of images from the project folder:  file.jpg | alt text | optional caption
 //   ::: row              videos and images side by side at equal height (Vimeo line or file.jpg | alt);
 //                        a row with one item is capped to the screen height (for tall art); `::: row center` centers it
 function markdown(md, ctx = {}) {
@@ -175,7 +175,9 @@ function imageSize(file) {
 const ratioNumber = r => { const [w, h] = String(r).split('/').map(Number); return w > 0 && h > 0 ? w / h : 16 / 9; };
 
 function mediaBlock(kind, arg, items, ctx) {
-  const img = it => `<img src="${esc(ctx.mediaPath ? ctx.mediaPath(it.a) : it.a)}" alt="${esc(it.b)}" loading="lazy" decoding="async">`;
+  // Image lines are `file.jpg | alt text | optional visible caption`.
+  const img = it => `<img src="${esc(ctx.mediaPath ? ctx.mediaPath(it.a) : it.a)}" alt="${esc(it.b.split('|')[0].trim())}" loading="lazy" decoding="async">`;
+  const caption = it => { const c = it.b.split('|').slice(1).join('|').trim(); return c ? `<figcaption>${inline(c)}</figcaption>` : ''; };
   if (kind === 'video') return items.map(it => `<div class="media-wide${arg === 'center' ? ' is-centered' : ''}">${embed(it.a, it.b, filmRatios.get(it.a))}</div>`).join('\n');
   if (kind === 'videos') {
     const cols = items.length === 2 || items.length === 4 ? 2 : 3;
@@ -186,14 +188,14 @@ function mediaBlock(kind, arg, items, ctx) {
     const ratio = arg || '4/3';
     const cols = items.length === 1 ? 1 : items.length === 2 || items.length === 4 ? 2 : 3;
     return `<div class="media-grid cols-${cols}" style="--ratio: ${esc(ratio)}">${items.map(it =>
-      `<figure class="still"><a href="${esc(ctx.mediaPath ? ctx.mediaPath(it.a) : it.a)}">${img(it)}</a></figure>`).join('')}</div>`;
+      `<figure class="still"><a href="${esc(ctx.mediaPath ? ctx.mediaPath(it.a) : it.a)}">${img(it)}</a>${caption(it)}</figure>`).join('')}</div>`;
   }
   if (kind === 'row') {
     return `<div class="media-row${arg === 'center' ? ' is-centered' : ''}">${items.map(it => {
       if (IMAGE_FILE.test(it.a)) {
         const size = ctx.folder && imageSize(path.join(ctx.folder, it.a));
         const r = size ? size.w / size.h : 4 / 3;
-        return `<div class="media-cell" style="--r: ${r.toFixed(4)}"><figure class="still" style="--ratio: ${r.toFixed(4)}">${img(it)}</figure></div>`;
+        return `<div class="media-cell" style="--r: ${r.toFixed(4)}"><figure class="still" style="--ratio: ${r.toFixed(4)}">${img(it)}${caption(it)}</figure></div>`;
       }
       const ratio = filmRatios.get(it.a) || '16 / 9';
       return `<div class="media-cell" style="--r: ${ratioNumber(ratio).toFixed(4)}">${embed(it.a, it.b, ratio)}</div>`;

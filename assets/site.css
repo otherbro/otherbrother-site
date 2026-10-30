@@ -179,14 +179,15 @@ body.home { position: fixed; inset: 0; overflow: hidden; overscroll-behavior: no
 .embed { margin: 0; display: flex; flex-direction: column; gap: 8px; }
 .embed-frame { aspect-ratio: var(--video-ratio, 16 / 9); background: #D6E6FB; border-radius: 12px; overflow: hidden; }
 .embed-frame iframe { width: 100%; height: 100%; border: 0; }
-.embed figcaption { font-size: 15px; color: var(--ink-mute); }
+.embed figcaption, .still figcaption { font-size: 15px; color: var(--ink-mute); }
 .media-wide .embed-frame { border-radius: 14px; width: min(100%, calc((100svh - 180px) * (var(--video-ratio, 16 / 9)))); }
 .media-wide.is-centered .embed { align-items: center; text-align: center; }
 .media-row { display: flex; gap: 12px; align-items: flex-start; }
 .media-cell { flex: var(--r, 1) 1 0; min-width: 0; } /* --r = width/height, so a row's items share one height */
 .media-row.is-centered { justify-content: center; align-items: center; }
 .media-cell:only-child { flex: 0 1 auto; width: min(100%, calc((100svh - 180px) * var(--r))); } /* lone tall image fits the screen */
-.still { margin: 0; }
+.still { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.media-row.is-centered .still { text-align: center; }
 .still img { width: 100%; aspect-ratio: var(--ratio, 4/3); object-fit: cover; border-radius: 10px; }
 
 /* work list */

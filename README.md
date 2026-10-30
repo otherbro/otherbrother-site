@@ -41,8 +41,8 @@ Body text. Blank lines start new paragraphs.
 ### Production art          ← a section label
 
 ::: images 16/9
-art-1.jpg | Caption
-art-2.jpg | Caption
+art-1.jpg | Description of the picture (for screen readers)
+art-2.jpg | Description | Optional caption shown under it
 :::
 
 ::: video                  ← add "center" (::: video center) to center a narrow clip
