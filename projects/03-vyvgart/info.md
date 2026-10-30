@@ -36,20 +36,20 @@ bts-color-script.jpg | Color script, revision 5: thumbnails of every scene, movi
 :::
 
 ::: row
-bts-character-sketches.jpg | Early character sketches: grey antibody shapes given arms, wings, a hard hat, a suit and tie, and a barbell | Look development and ideation
-bts-character-lineup.jpg | Character lineup in color: yellow, teal, green and red antibody characters with hand-drawn arms, sunglasses and wings | Look development and ideation
+bts-character-sketches.jpg | Early character sketches: grey antibody shapes given arms, wings, a hard hat, a suit and tie, and a barbell | Character sketches
+bts-character-lineup.jpg | Character lineup in color: yellow, teal, green and red antibody characters with hand-drawn arms, sunglasses and wings | Character lineup
 :::
 
 ::: row
-bts-igg-good-bad.jpg | IgG design rules: good IgG in teal with rounded corners and rounded fingers, bad IgG in red with sharp corners and claw fingers, plus limb options and red character poses | Look development and ideation
-bts-igg-action-sketches.jpg | Action sketches: blue IgG characters with arms punching, cutting and shouting at orange shapes, with a chainsaw, scissors and a megaphone | Look development and ideation
+bts-igg-good-bad.jpg | IgG design rules: good IgG in teal with rounded corners and rounded fingers, bad IgG in red with sharp corners and claw fingers, plus limb options and red character poses | Good IgG vs. bad IgG
+bts-igg-action-sketches.jpg | Action sketches: blue IgG characters with arms punching, cutting and shouting at orange shapes, with a chainsaw, scissors and a megaphone | IgG action sketches
 :::
 
 ::: row
-bts-igg-variations.jpg | IgG graphic variations: 23 numbered texture and style tests of the Y-shaped antibody character in teal and red on navy | Look development and ideation
-bts-silhouette-pose-sheet.jpg | Silhouette character pose sheet: proportion guides and poses for considering, fidgeting, tired, sitting and standing proud, keyed to storyboard panels | Look development and ideation
+bts-igg-variations.jpg | IgG graphic variations: 23 numbered texture and style tests of the Y-shaped antibody character in teal and red on navy | IgG graphic variations
+bts-silhouette-pose-sheet.jpg | Silhouette character pose sheet: proportion guides and poses for considering, fidgeting, tired, sitting and standing proud, keyed to storyboard panels | Silhouette character pose sheet
 :::
 
 ::: row
-bts-silhouette-style-frame.jpg | Style frame: a white silhouette figure reaching up to a small star against a dark textured background | Look development and ideation
+bts-silhouette-style-frame.jpg | Style frame: a white silhouette figure reaching up to a small star against a dark textured background | Silhouette style frame
 :::
