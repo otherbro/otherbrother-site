@@ -57,10 +57,11 @@ function readDoc(file) {
   }
   return { data, body };
 }
+// A value may be quoted, and may end in a `# comment` (as the README examples do).
 function unquote(v) {
   v = v.trim();
-  if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) return v.slice(1, -1);
-  return v;
+  const q = v.match(/^(["'])(.*)\1(\s+#.*)?$/);
+  return q ? q[2] : v.replace(/\s+#.*$/, '');
 }
 
 // ---------------------------------------------------------------- vimeo

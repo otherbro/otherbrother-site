@@ -1,7 +1,7 @@
 ---
 title: "VYVGART Videos"
 tech: MOA/MOD film · 2D
-# vimeo: add the claims-free cut's Vimeo ID here when it's ready, e.g. "123456789"
+vimeo: "1241463597/ec317db437"
 description: "Award-winning 2D MOA/MOD animation for VYVGART by Other Brother, a pharma and healthcare animation studio. Passed every legal review from storyboard to final with no major revisions."
 ---
 
