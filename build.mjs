@@ -112,7 +112,7 @@ function embed(spec, title, ratio = '') {
 //   ::: videos 1/1       a grid of Vimeo videos, same line format (ratio optional, default 16/9)
 //   ::: images 16/9      a grid of images from the project folder:  file.jpg | alt text
 //   ::: row              videos and images side by side at equal height (Vimeo line or file.jpg | alt);
-//                        a row with one item is capped to the screen height (for tall art)
+//                        a row with one item is capped to the screen height (for tall art); `::: row center` centers it
 function markdown(md, ctx = {}) {
   const lines = md.replace(/\r\n/g, '\n').split('\n');
   const out = [];
@@ -189,7 +189,7 @@ function mediaBlock(kind, arg, items, ctx) {
       `<figure class="still"><a href="${esc(ctx.mediaPath ? ctx.mediaPath(it.a) : it.a)}">${img(it)}</a></figure>`).join('')}</div>`;
   }
   if (kind === 'row') {
-    return `<div class="media-row">${items.map(it => {
+    return `<div class="media-row${arg === 'center' ? ' is-centered' : ''}">${items.map(it => {
       if (IMAGE_FILE.test(it.a)) {
         const size = ctx.folder && imageSize(path.join(ctx.folder, it.a));
         const r = size ? size.w / size.h : 4 / 3;

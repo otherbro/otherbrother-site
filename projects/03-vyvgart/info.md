@@ -26,14 +26,8 @@ The audience feedback was overwhelmingly positive. Many patients reported that t
 
 ### Behind the scenes
 
-::: row
-bts-character-sketches.jpg | Early character sketches: grey antibody shapes given arms, wings, a hard hat, a suit and tie, and a barbell
-bts-character-lineup.jpg | Character lineup in colour: yellow, teal, green and red antibody characters with hand-drawn arms, sunglasses and wings
-:::
-
-::: row
-bts-silhouette-style-frame.jpg | Style frame: a white silhouette figure reaching up to a small star against a dark textured background
-bts-silhouette-pose-sheet.jpg | Silhouette character pose sheet: proportion guides and poses for considering, fidgeting, tired, sitting and standing proud, keyed to storyboard panels
+::: row center
+bts-color-script.jpg | Colour script, revision 5: thumbnails of every scene, moving from light outdoor scenes to dark navy titles and red and purple blood-vessel scenes
 :::
 
 ::: row
@@ -42,5 +36,20 @@ bts-silhouette-pose-sheet.jpg | Silhouette character pose sheet: proportion guid
 :::
 
 ::: row
-bts-color-script.jpg | Colour script, revision 5: thumbnails of every scene, moving from light outdoor scenes to dark navy titles and red and purple blood-vessel scenes
+bts-character-sketches.jpg | Early character sketches: grey antibody shapes given arms, wings, a hard hat, a suit and tie, and a barbell
+bts-character-lineup.jpg | Character lineup in colour: yellow, teal, green and red antibody characters with hand-drawn arms, sunglasses and wings
+:::
+
+::: row
+bts-igg-good-bad.jpg | IgG design rules: good IgG in teal with rounded corners and rounded fingers, bad IgG in red with sharp corners and claw fingers, plus limb options and red character poses
+bts-igg-action-sketches.jpg | Action sketches: blue IgG characters with arms punching, cutting and shouting at orange shapes, with a chainsaw, scissors and a megaphone
+:::
+
+::: row
+bts-igg-variations.jpg | IgG graphic variations: 23 numbered texture and style tests of the Y-shaped antibody character in teal and red on navy
+bts-silhouette-pose-sheet.jpg | Silhouette character pose sheet: proportion guides and poses for considering, fidgeting, tired, sitting and standing proud, keyed to storyboard panels
+:::
+
+::: row
+bts-silhouette-style-frame.jpg | Style frame: a white silhouette figure reaching up to a small star against a dark textured background
 :::

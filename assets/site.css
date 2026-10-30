@@ -184,6 +184,7 @@ body.home { position: fixed; inset: 0; overflow: hidden; overscroll-behavior: no
 .media-wide.is-centered .embed { align-items: center; text-align: center; }
 .media-row { display: flex; gap: 12px; align-items: flex-start; }
 .media-cell { flex: var(--r, 1) 1 0; min-width: 0; } /* --r = width/height, so a row's items share one height */
+.media-row.is-centered { justify-content: center; align-items: center; }
 .media-cell:only-child { flex: 0 1 auto; width: min(100%, calc((100svh - 180px) * var(--r))); } /* lone tall image fits the screen */
 .still { margin: 0; }
 .still img { width: 100%; aspect-ratio: var(--ratio, 4/3); object-fit: cover; border-radius: 10px; }
