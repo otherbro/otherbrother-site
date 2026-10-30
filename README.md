@@ -54,7 +54,7 @@ art-2.jpg | Caption
 222222222 | Second clip
 :::
 
-::: row                    ← videos and pictures side by side, sized to the same height
+::: row                    ← videos and pictures side by side, sized to the same height (one tall picture alone fits the screen)
 111111111 | Clip caption
 photo.jpg | Description of the photo
 :::

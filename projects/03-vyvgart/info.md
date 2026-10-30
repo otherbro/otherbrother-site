@@ -23,3 +23,24 @@ The audience feedback was overwhelmingly positive. Many patients reported that t
 - Silver Telly Winner – Social Video – Fully Animated Piece
 - Gold Telly Winner – Social Video – Art Direction
 - Silver Telly Winner – Social Video – Pharmaceutical
+
+### Behind the scenes
+
+::: row
+bts-character-sketches.jpg | Early character sketches: grey antibody shapes given arms, wings, a hard hat, a suit and tie, and a barbell
+bts-character-lineup.jpg | Character lineup in colour: yellow, teal, green and red antibody characters with hand-drawn arms, sunglasses and wings
+:::
+
+::: row
+bts-silhouette-style-frame.jpg | Style frame: a white silhouette figure reaching up to a small star against a dark textured background
+bts-silhouette-pose-sheet.jpg | Silhouette character pose sheet: proportion guides and poses for considering, fidgeting, tired, sitting and standing proud, keyed to storyboard panels
+:::
+
+::: row
+792717188/a490b2c827 | Hand-drawn animation test 1
+792734051/43590b7771 | Hand-drawn animation test 2
+:::
+
+::: row
+bts-color-script.jpg | Colour script, revision 5: thumbnails of every scene, moving from light outdoor scenes to dark navy titles and red and purple blood-vessel scenes
+:::

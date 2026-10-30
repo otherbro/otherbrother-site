@@ -111,7 +111,8 @@ function embed(spec, title, ratio = '') {
 //   ::: video center     same, centered (for clips narrower than the column)
 //   ::: videos 1/1       a grid of Vimeo videos, same line format (ratio optional, default 16/9)
 //   ::: images 16/9      a grid of images from the project folder:  file.jpg | alt text
-//   ::: row              videos and images side by side at equal height (Vimeo line or file.jpg | alt)
+//   ::: row              videos and images side by side at equal height (Vimeo line or file.jpg | alt);
+//                        a row with one item is capped to the screen height (for tall art)
 function markdown(md, ctx = {}) {
   const lines = md.replace(/\r\n/g, '\n').split('\n');
   const out = [];
@@ -192,10 +193,10 @@ function mediaBlock(kind, arg, items, ctx) {
       if (IMAGE_FILE.test(it.a)) {
         const size = ctx.folder && imageSize(path.join(ctx.folder, it.a));
         const r = size ? size.w / size.h : 4 / 3;
-        return `<div class="media-cell" style="flex-grow: ${r.toFixed(4)}"><figure class="still" style="--ratio: ${r.toFixed(4)}">${img(it)}</figure></div>`;
+        return `<div class="media-cell" style="--r: ${r.toFixed(4)}"><figure class="still" style="--ratio: ${r.toFixed(4)}">${img(it)}</figure></div>`;
       }
       const ratio = filmRatios.get(it.a) || '16 / 9';
-      return `<div class="media-cell" style="flex-grow: ${ratioNumber(ratio).toFixed(4)}">${embed(it.a, it.b, ratio)}</div>`;
+      return `<div class="media-cell" style="--r: ${ratioNumber(ratio).toFixed(4)}">${embed(it.a, it.b, ratio)}</div>`;
     }).join('')}</div>`;
   }
   return '';
