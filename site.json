@@ -2,8 +2,9 @@
   "name": "Other Brother",
   "tagline": "Handmade stories for curious brands and serious science",
   "description": "Other Brother is an animation and production studio from director duo Isaiah Powers and Stuart Bury: stop motion, puppetry, papercraft, mixed media and 2D, for brands, broadcasters and pharma and healthcare teams.",
-  "url": "https://otherbro.github.io/otherbrother-site",
-  "basePath": "/otherbrother-site",
+  "url": "https://otherbrother.com",
+  "basePath": "",
+  "domain": "otherbrother.com",
   "email": "info@otherbrother.com",
   "founders": ["Isaiah Powers", "Stuart Bury"],
   "social": {
