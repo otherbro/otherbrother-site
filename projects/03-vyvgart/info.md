@@ -11,18 +11,11 @@ Our flagship VYVGART video made it through all of the legal reviews from storybo
 
 The audience feedback was overwhelmingly positive. Many patients reported that they felt heard and respected and that they had never seen a video like this before. Our animations spoke to them, not at them. We were able to present complex ideas in a way that was clear, beneficial and engaging.
 
-### Awards & accolades
+### Groundbreaking Creativity. Award-Winning Execution.
 
-- The 2024 PM360 Pharma Choice Awards – Variety Bronze Winner
-- Gold Telly Winner – Non-Broadcast – Fully Animated Piece
-- Silver Telly Winner – Non-Broadcast – Use of Animation
-- Bronze Telly Winner – Non-Broadcast – Motion Graphics / Design
-- Bronze Telly Winner – Non-Broadcast – 3D Graphics/Animation
-- Silver Telly Winner – Non-Broadcast – Pharmaceuticals
-- Gold Telly Winner – Social Video – Editing
-- Silver Telly Winner – Social Video – Fully Animated Piece
-- Gold Telly Winner – Social Video – Art Direction
-- Silver Telly Winner – Social Video – Pharmaceutical
+### 11 Awards. One Powerful Story.
+
+Recognized by the PM360 Pharma Choice Awards and the Telly Awards for excellence in pharmaceutical storytelling, animation, motion graphics, art direction, and editing.
 
 ### Behind the scenes
 
