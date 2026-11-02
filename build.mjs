@@ -318,6 +318,12 @@ ${deferMedia(inner)}
   </div>
 </section>`;
 
+// Logo + main links on light pages (project pages, 404).
+const pageHeader = () => `<header class="page-header">
+  <a class="logo" href="${href('/')}" aria-label="${esc(site.name)}, home"><span class="logo-mark" aria-hidden="true"></span><span class="visually-hidden">${esc(site.name)}</span></a>
+  <nav aria-label="Main"><a href="${href('/')}">Work</a><a href="${href('/#about')}">About</a><a href="${href('/#contact')}">Contact</a></nav>
+</header>`;
+
 const socialLinks = () => Object.entries(site.social)
   .map(([k, u]) => `<a href="${esc(u)}">${esc(k)}</a>`).join('');
 
@@ -455,10 +461,7 @@ function projectPage(p, k) {
 
   return `${head({ title: `${p.title} — ${site.name}`, description: p.description || site.description, url: p.url, image: p.poster ? p.url + p.poster : '', jsonld })}
 <body class="project">
-<header class="page-header">
-  <a class="logo" href="${href('/')}" aria-label="${esc(site.name)}, home"><span class="logo-mark" aria-hidden="true"></span><span class="visually-hidden">${esc(site.name)}</span></a>
-  <nav aria-label="Main"><a href="${href('/')}">Work</a><a href="${href('/#about')}">About</a><a href="${href('/#contact')}">Contact</a></nav>
-</header>
+${pageHeader()}
 <main class="project-main">
   <div class="film" style="--ratio: ${p.ratio}"${p.vimeo ? ` data-film="${esc(vimeoSrc(p.vimeo, { autoplay: '1' }))}"` : ''}>
     ${posterUrl ? `<img class="film-poster" src="${posterUrl}" alt="${esc(p.title)}" fetchpriority="high" decoding="async">` : ''}
@@ -498,11 +501,13 @@ function redirectPage(to) {
 function notFoundPage() {
   return `${head({ title: `Page not found — ${site.name}`, description: site.description, url: '/404.html' })}
 <body class="plain">
+${pageHeader()}
 <main class="plain-main">
   <p class="eyebrow">404</p>
   <h1>That page wandered off.</h1>
   <p>It may have moved when we rebuilt the site.</p>
   <p><a class="email-button" href="${href('/')}">See the work</a></p>
+  <div class="link-row"><a href="${href('/#about')}">About us</a><a href="${href('/#contact')}">Contact</a></div>
 </main>
 </body>
 </html>

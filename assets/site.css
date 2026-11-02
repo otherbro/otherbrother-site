@@ -233,7 +233,7 @@ body.project { background: var(--sheet); }
 /* ---------------------------------------------------------------- 404 */
 
 body.plain { background: var(--sheet); }
-.plain-main { max-width: 720px; margin: 0 auto; padding: 18vh var(--gutter); }
+.plain-main { max-width: 720px; margin: 0 auto; padding: 10vh var(--gutter); }
 .plain-main h1 { font-size: var(--h2); margin: 0 0 12px; }
 .eyebrow { font-weight: 700; letter-spacing: 0.08em; color: var(--ink-mute); }
 
