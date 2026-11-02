@@ -8,4 +8,4 @@
 - Homepage slide stays for twice its loop's length, i.e. the loop plays twice (6 s without a loop); manual navigation resets the timer.
 - Page weight: sheet media and all slide posters but the first are emitted as `data-src` and loaded by site.js on demand (sheet open / current+next slide). Inter Tight is self-hosted in `assets/fonts/` (no Google Fonts). Keep JPEGs ~q82 progressive.
 - `BASE_PATH` / `SITE_URL` env vars override `site.json` (site now at the root of https://otherbrother.com; DNS points at GitHub Pages, custom domain set in the repo's Pages settings).
-- Video hosting is Vimeo only; no medical claims beyond approved copy for pharma projects (VYVGART's film is the unbranded cut, Vimeo 1241463597).
+- Video hosting is Vimeo only; no medical claims beyond approved copy for pharma projects (VYVGART's film is the unbranded sting, Vimeo 1242480419).
