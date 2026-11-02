@@ -11,9 +11,7 @@ Our flagship VYVGART video made it through all of the legal reviews from storybo
 
 The audience feedback was overwhelmingly positive. Many patients reported that they felt heard and respected and that they had never seen a video like this before. Our animations spoke to them, not at them. We were able to present complex ideas in a way that was clear, beneficial and engaging.
 
-### Groundbreaking Creativity. Award-Winning Execution.
-
-### 11 Awards. One Powerful Story.
+### 11 Award Wins for Groundbreaking Creativity & Innovation.
 
 Recognized by the PM360 Pharma Choice Awards and the Telly Awards for excellence in pharmaceutical storytelling, animation, motion graphics, art direction, and editing.
 
