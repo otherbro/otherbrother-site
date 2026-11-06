@@ -292,7 +292,24 @@ ${img ? `<meta property="og:image" content="${esc(img)}">\n<meta name="twitter:i
 <link rel="stylesheet" href="${asset('/assets/site.css')}">
 <link rel="preconnect" href="https://player.vimeo.com">
 ${jsonld.map(j => `<script type="application/ld+json">${JSON.stringify(j).replace(/</g, '\\u003c')}</script>`).join('\n')}
+${analytics()}
 </head>`;
+}
+
+// Tracking tags, switched on by IDs in site.json "analytics" (an empty or missing ID emits nothing).
+function analytics() {
+  const { clarity, googleAnalytics, googleSiteVerification } = site.analytics || {};
+  const tags = [];
+  if (googleSiteVerification) tags.push(`<meta name="google-site-verification" content="${esc(googleSiteVerification)}">`);
+  if (googleAnalytics) {
+    const id = JSON.stringify(googleAnalytics);
+    tags.push(`<script async src="https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(googleAnalytics)}"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config',${id});</script>`);
+  }
+  if (clarity) {
+    tags.push(`<script>(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script",${JSON.stringify(clarity)});</script>`);
+  }
+  return tags.join('\n');
 }
 
 const orgLd = () => ({

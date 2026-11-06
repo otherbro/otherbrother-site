@@ -23,5 +23,10 @@
     "/vyvgart-case-study": "/work/vyvgart/",
     "/bayer-advantage-multi-copy": "/work/advantage-multi/",
     "/other-brother-blog": "/"
+  },
+  "analytics": {
+    "clarity": "",
+    "googleAnalytics": "",
+    "googleSiteVerification": ""
   }
 }
