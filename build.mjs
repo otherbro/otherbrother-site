@@ -5,6 +5,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import { execFileSync } from 'node:child_process';
 
 const ROOT = path.dirname(new URL(import.meta.url).pathname);
 const OUT = path.join(ROOT, '_site');
@@ -88,16 +89,23 @@ function parseRatio(v) {
   const m = String(v || '').match(/^\s*(\d+(?:\.\d+)?)\s*[/:x]\s*(\d+(?:\.\d+)?)\s*$/);
   return m && +m[1] > 0 && +m[2] > 0 ? `${m[1]} / ${m[2]}` : '';
 }
-async function vimeoRatio(spec) {
+// One oEmbed call per clip gives both its shape and its Vimeo upload date ("2019-04-01 10:12:13").
+async function vimeoInfo(spec) {
   try {
     const res = await fetch(`https://vimeo.com/api/oembed.json?url=${encodeURIComponent(vimeoPage(spec))}`, { signal: AbortSignal.timeout(8000) });
-    if (!res.ok) return '';
-    const { width, height } = await res.json();
-    return width && height ? `${width} / ${height}` : '';
-  } catch { return ''; }
+    if (!res.ok) return {};
+    const { width, height, upload_date } = await res.json();
+    const day = String(upload_date || '').match(/^\d{4}-\d{2}-\d{2}/);
+    return { ratio: width && height ? `${width} / ${height}` : '', date: day ? day[0] : '' };
+  } catch { return {}; }
 }
 // Filled in at build start for every film and `::: video` / `::: row` clip (see clipSpecs below).
 const filmRatios = new Map();
+const filmDates = new Map();
+// Last resort for a film's VideoObject uploadDate (Google requires one): the project folder's last commit date.
+function gitDate(dir) {
+  try { return execFileSync('git', ['log', '-1', '--format=%cs', '--', dir], { cwd: ROOT, encoding: 'utf8' }).trim(); } catch { return ''; }
+}
 const IMAGE_FILE = /\.(jpe?g|png|webp|gif)$/i;
 function embed(spec, title, ratio = '') {
   return `<figure class="embed"><div class="embed-frame"${ratio ? ` style="--video-ratio: ${esc(ratio)}"` : ''}><iframe src="${esc(vimeoSrc(spec))}" title="${esc(title || 'Video')}" loading="lazy" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>${title ? `<figcaption>${inline(title)}</figcaption>` : ''}</figure>`;
@@ -242,11 +250,11 @@ const projects = loadProjects();
 const clipSpecs = p => [...p.body.matchAll(/^:::\s*(?:video|row)\b[^\n]*\n([\s\S]*?)^:::/gm)]
   .flatMap(m => m[1].split('\n').map(l => l.split('|')[0].trim()).filter(a => a && !IMAGE_FILE.test(a)));
 await Promise.all([...new Set(projects.flatMap(p => [p.vimeo, ...clipSpecs(p)].filter(Boolean)))]
-  .map(async spec => { const r = await vimeoRatio(spec); if (r) filmRatios.set(spec, r); }));
+  .map(async spec => { const { ratio, date } = await vimeoInfo(spec); if (ratio) filmRatios.set(spec, ratio); if (date) filmDates.set(spec, date); }));
 for (const p of projects) {
   p.ratio = parseRatio(p.data.ratio) || filmRatios.get(p.vimeo) || '16 / 9';
   p.bodyHtml = markdown(p.body, { mediaPath: p.mediaPath, folder: p.folder });
-  console.log(`  ${p.slug}: ${p.ratio}${clipSpecs(p).map(c => `, ${c}: ${filmRatios.get(c) || '16 / 9'}`).join('')}`);
+  console.log(`  ${p.slug}: ${p.ratio}${p.vimeo ? ` (uploaded ${filmDates.get(p.vimeo) || "date not found on Vimeo"})` : ""}${clipSpecs(p).map(c => `, ${c}: ${filmRatios.get(c) || '16 / 9'}`).join('')}`);
 }
 // Asset URLs carry a fingerprint of the file so browsers never run an old copy after an update.
 const asset = rel => href(rel) + '?v=' + crypto.createHash('md5').update(fs.readFileSync(path.join(ROOT, rel))).digest('hex').slice(0, 8);
@@ -462,7 +470,7 @@ function projectPage(p, k) {
       thumbnailUrl: p.poster ? abs(p.url + p.poster) : undefined,
       embedUrl: vimeoSrc(p.vimeo),
       url: abs(p.url),
-      ...(p.data.date ? { uploadDate: p.data.date } : {}),
+      uploadDate: p.data.date || filmDates.get(p.vimeo) || gitDate(p.folder) || new Date().toISOString().slice(0, 10),
       creator: { '@id': abs('/#organization') },
       publisher: { '@id': abs('/#organization') },
       ...(p.data.client ? { sourceOrganization: { '@type': 'Organization', name: p.data.client } } : {}),
