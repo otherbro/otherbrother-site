@@ -95,16 +95,33 @@ async function vimeoInfo(spec) {
     const res = await fetch(`https://vimeo.com/api/oembed.json?url=${encodeURIComponent(vimeoPage(spec))}`, { signal: AbortSignal.timeout(8000) });
     if (!res.ok) return {};
     const { width, height, upload_date } = await res.json();
-    const day = String(upload_date || '').match(/^\d{4}-\d{2}-\d{2}/);
-    return { ratio: width && height ? `${width} / ${height}` : '', date: day ? day[0] : '' };
+    return { ratio: width && height ? `${width} / ${height}` : '', date: isoDateTime(upload_date, 'America/New_York') };
   } catch { return {}; }
 }
 // Filled in at build start for every film and `::: video` / `::: row` clip (see clipSpecs below).
 const filmRatios = new Map();
 const filmDates = new Map();
+// Google wants VideoObject uploadDate as a full ISO 8601 date-time with a timezone, e.g. 2019-04-01T10:12:13-04:00.
+// Accepts "2019-04-01", "2019-04-01 10:12:13" or an ISO string; a time without a zone is read in `zone`
+// (Vimeo's oEmbed upload_date is US Eastern). Returns '' for anything unparseable.
+function isoDateTime(value, zone = 'UTC') {
+  const v = value instanceof Date ? value.toISOString() : String(value || '').trim();
+  const m = v.match(/^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2})(?::(\d{2}))?)?(?:\.\d+)?\s*(Z|[+-]\d{2}:?\d{2})?$/i);
+  if (!m) return '';
+  const [, y, mo, d, h = '00', mi = '00', sec = '00', tz] = m;
+  const local = `${y}-${mo}-${d}T${h}:${mi}:${sec}`;
+  if (tz) return local + (tz.toUpperCase() === 'Z' ? '+00:00' : tz.replace(/^([+-]\d{2})(\d{2})$/, '$1:$2'));
+  // Offset of `zone` at that moment (close enough across a DST switch for a publish date).
+  const asUtc = Date.UTC(+y, +mo - 1, +d, +h, +mi, +sec);
+  if (Number.isNaN(asUtc)) return '';
+  const name = new Intl.DateTimeFormat('en-US', { timeZone: zone, timeZoneName: 'longOffset' })
+    .formatToParts(new Date(asUtc)).find(x => x.type === 'timeZoneName')?.value || 'GMT';
+  const off = name.replace('GMT', '') || '+00:00';
+  return local + (/^[+-]\d{2}$/.test(off) ? off + ':00' : off);
+}
 // Last resort for a film's VideoObject uploadDate (Google requires one): the project folder's last commit date.
 function gitDate(dir) {
-  try { return execFileSync('git', ['log', '-1', '--format=%cs', '--', dir], { cwd: ROOT, encoding: 'utf8' }).trim(); } catch { return ''; }
+  try { return execFileSync('git', ['log', '-1', '--format=%cI', '--', dir], { cwd: ROOT, encoding: 'utf8' }).trim(); } catch { return ''; }
 }
 const IMAGE_FILE = /\.(jpe?g|png|webp|gif)$/i;
 function embed(spec, title, ratio = '') {
@@ -470,7 +487,7 @@ function projectPage(p, k) {
       thumbnailUrl: p.poster ? abs(p.url + p.poster) : undefined,
       embedUrl: vimeoSrc(p.vimeo),
       url: abs(p.url),
-      uploadDate: p.data.date || filmDates.get(p.vimeo) || gitDate(p.folder) || new Date().toISOString().slice(0, 10),
+      uploadDate: isoDateTime(p.data.date) || filmDates.get(p.vimeo) || isoDateTime(gitDate(p.folder)) || isoDateTime(new Date()),
       creator: { '@id': abs('/#organization') },
       publisher: { '@id': abs('/#organization') },
       ...(p.data.client ? { sourceOrganization: { '@type': 'Organization', name: p.data.client } } : {}),
